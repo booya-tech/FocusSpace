@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct FocusSpaceApp: App {
+    @StateObject private var appViewModel = AppViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+             RootView()
+                .environmentObject(appViewModel)
         }
     }
 }
