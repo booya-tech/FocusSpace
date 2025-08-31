@@ -25,7 +25,7 @@ final class TimerViewModel: ObservableObject {
     @Published var totalSeconds: Int = 0
     @Published var currentState: TimerState = .idle
     @Published var currentSessionType: SessionType = .focus
-    @Published var selectedPresent: TimerPreset = TimerPreset.defaults[0]
+    @Published var selectedPreset: TimerPreset = TimerPreset.defaults[0]
     @Published var completedSessions: [Session] = []
 
     // Computed properties
@@ -57,7 +57,7 @@ final class TimerViewModel: ObservableObject {
     func start(preset: TimerPreset, sessionType: SessionType = .focus) {
         stop() // Clear any existing timer
 
-        selectedPresent = preset
+        selectedPreset = preset
         currentSessionType = sessionType
         totalSeconds = preset.minutes * 60
         remainingSeconds = totalSeconds
@@ -100,7 +100,7 @@ final class TimerViewModel: ObservableObject {
         completeCurrentSession()
 
         // Start short break
-        let breakDuration = SessionType.shortBreak.displayMinutes
+        let breakDuration = SessionType.shortBreak.defaultMinutes
         let breakPreset = TimerPreset(durationTitle: "\(breakDuration)", minutes: breakDuration)
         start(preset: breakPreset, sessionType: .shortBreak)
     }
@@ -125,7 +125,7 @@ final class TimerViewModel: ObservableObject {
             return
         }
 
-        return remainingSeconds -= 1
+        remainingSeconds -= 1
     }
 
     private func timerCompleted() {
@@ -156,7 +156,7 @@ final class TimerViewModel: ObservableObject {
         // Auto-start break after focus session
         if currentSessionType == .focus {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                let breakDuration = SessionType.shortBreak.displayMinutes
+                let breakDuration = SessionType.shortBreak.defaultMinutes
                 let breakPreset = TimerPreset(durationTitle: "\(breakDuration)", minutes: breakDuration)
 
                 self.start(preset: breakPreset, sessionType: .shortBreak)

@@ -8,19 +8,39 @@
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack(spacing: 24) {
-            Text("25:00")
-                .font(AppTypography.timerLarge)
-                .foregroundColor(AppColors.primaryText)
+    @StateObject private var timerViewModel = TimerViewModel()
 
-            Text("Focus Timer")
-                .font(AppTypography.title2)
+    var body: some View {
+        VStack(spacing: 32) {
+            // Session type indicator 
+            Text(timerViewModel.currentSessionType.displayName)
+                .font(AppTypography.title3)
                 .foregroundColor(AppColors.secondaryText)
 
-            PrimaryButton(title: "Start Focus Session", action: {
-                // TODO: Implement timer start
-            })
+            // Timer display
+            VStack(spacing: 8) {
+                Text(timerViewModel.formattedTime)
+                    .font(AppTypography.timerLarge)
+                    .foregroundColor(AppColors.primaryText)
+                    .monospacedDigit()
+
+                // Progress indicator
+                if !timerViewModel.isIdle {
+                    ProgressView(value: timerViewModel.progress)
+                        .progressViewStyle(LinearProgressViewStyle(tint: AppColors.accent))
+                        .frame(width: 200)
+                }
+            }
+
+            // Preset selection (only when idle)
+            if timerViewModel.isIdle {
+                PresetSelectionView(selectedPreset: $timerViewModel.selectedPreset, presets: TimerPreset.defaults)
+            }
+
+            // Timer controls
+            TimerControlsView(timerViewModel: timerViewModel)
+
+            Spacer()
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)

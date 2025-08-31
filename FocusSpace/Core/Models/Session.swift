@@ -21,7 +21,7 @@ enum SessionType: String, CaseIterable {
         }
     }
 
-    var displayMinutes: Int {
+    var defaultMinutes: Int {
         switch self {
             case .focus: return 25
             case .shortBreak: return 5
