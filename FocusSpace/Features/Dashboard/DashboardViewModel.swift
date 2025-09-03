@@ -97,7 +97,7 @@ final class DashboardViewModel: ObservableObject {
         let today = Date()
 
         return (0..<7).compactMap { dayOffSet in
-            guard let date = calendar.date(byAdding: .day, value: dayOffSet, to: today) else { return nil }
+            guard let date = calendar.date(byAdding: .day, value: -dayOffSet, to: today) else { return nil }
 
             let daySessions = sessions.filter { session in
                 calendar.isDate(session.startAt, inSameDayAs: date)
