@@ -9,6 +9,7 @@
 
 import Foundation
 import SwiftUI
+import UIKit
 
 /// Timer state for the state machine
 enum TimerState {
@@ -65,6 +66,9 @@ final class TimerViewModel: ObservableObject {
         currentState = .running
 
         startTimer()
+
+        // Add haptic feedback
+        HapticManager.shared.light()
     }
 
     // Pause the current timer
@@ -73,6 +77,9 @@ final class TimerViewModel: ObservableObject {
 
         currentState = .paused
         stopTimer()
+
+        // Add haptic feedback
+        HapticManager.shared.light()
     }
 
     // Resume the paused timer
@@ -81,6 +88,9 @@ final class TimerViewModel: ObservableObject {
 
         currentState = .running
         startTimer()
+
+        // Add haptic feedback
+        HapticManager.shared.medium()
     }
 
     // Stop and reset the timer
@@ -90,6 +100,9 @@ final class TimerViewModel: ObservableObject {
         remainingSeconds = 0
         totalSeconds = 0
         sessionStartTime = nil
+
+        // Add haptic feedback
+        HapticManager.shared.warning()
     }
 
     // Skip to break (when in focus session)
@@ -131,6 +144,9 @@ final class TimerViewModel: ObservableObject {
     private func timerCompleted() {
         currentState = .completed
         stopTimer()
+
+        // Add haptic feedback
+        HapticManager.shared.success()
 
         // Save completed session
         completeCurrentSession()

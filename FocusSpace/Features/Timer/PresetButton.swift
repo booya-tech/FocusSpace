@@ -13,7 +13,10 @@ struct PresetButton: View {
     let action: () -> Void
     
     var body: some View {
-        Button(action: action) {
+        Button(action: {
+            HapticManager.shared.light()
+            action()
+        }) {
             Text("\(preset.minutes)m")
                 .font(AppTypography.body)
                 .foregroundColor(isSelected ? AppColors.background : AppColors.primaryText)
