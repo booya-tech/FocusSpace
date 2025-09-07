@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var timerViewModel = TimerViewModel()
+    @EnvironmentObject var timerViewModel: TimerViewModel
 
     var body: some View {
         VStack(spacing: 32) {
@@ -49,5 +49,14 @@ struct ContentView: View {
 }
 
 #Preview {
+    let localRepo = LocalSessionRepository()
+    let remoteRepo = RemoteSessionRepository()
+    let syncService = SessionSyncService(
+        localRepository: localRepo,
+        remoteRepository: remoteRepo
+    )
+    let timerViewModel = TimerViewModel(sessionSync: syncService)
+    
     ContentView()
+        .environmentObject(timerViewModel)
 }

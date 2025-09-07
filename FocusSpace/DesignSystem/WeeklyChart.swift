@@ -12,7 +12,7 @@ import SwiftUI
 /// Simple bar chart showing weekly focus session minutes
 struct WeeklyChart: View {
     let data: [DayData]
-    let maxHeight: CGFloat = 60
+    let maxHeight: CGFloat = 60 // 60 minutes
 
     private var maxMinutes: Int {
         data.map(\.minutes).max() ?? 1

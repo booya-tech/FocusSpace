@@ -27,7 +27,9 @@ final class TimerViewModel: ObservableObject {
     @Published var currentState: TimerState = .idle
     @Published var currentSessionType: SessionType = .focus
     @Published var selectedPreset: TimerPreset = TimerPreset.defaults[0]
+    
     @Published var completedSessions: [Session] = []
+    private let sessionSync: SessionSyncService
 
     // Computed properties
     var isRunning: Bool { currentState == .running }
@@ -52,6 +54,51 @@ final class TimerViewModel: ObservableObject {
 
     private var timer: Timer?
     private var sessionStartTime: Date?
+
+    // Initialization
+    init(sessionSync: SessionSyncService) {
+        self.sessionSync = sessionSync
+
+        Task {
+            await loadSessions()
+        }
+    }
+
+    private func loadSessions() async {
+        do {
+            let sessions = try await sessionSync.getSessions()
+            await MainActor.run {
+                self.completedSessions = sessions
+            }
+        } catch {
+            print("Failed to load sessions: \(error)")
+        }
+    } 
+
+    // Save session via sync service
+    private func saveSession(_ session: Session) async {
+        do {
+            try await sessionSync.saveSession(session)
+            await loadSessions()
+        } catch {
+            print("Failed to save session: \(error)")
+        }
+    }
+
+    // Sync methods
+    func syncNow() async {
+        do {
+            try await sessionSync.syncNow()
+            await loadSessions()
+        } catch {
+            print("Sync failed: \(error)")
+        }
+    }
+
+    func syncOnForeground() async {
+        await sessionSync.syncOnAppForeground()
+        await loadSessions()
+    }
 
     // MARK: - Timer Actions
     // Start a new timer session
@@ -165,7 +212,10 @@ final class TimerViewModel: ObservableObject {
             tag: nil
         )
 
-        completedSessions.append(session)
+        Task {
+            await saveSession(session)
+            HapticManager.shared.success()
+        }
     }
 
     private func autoTransition() {

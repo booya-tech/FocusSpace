@@ -40,5 +40,13 @@ struct TimerControlsView: View {
 }
 
 #Preview {
-    TimerControlsView(timerViewModel: TimerViewModel())
+    let localRepo = LocalSessionRepository()
+    let remoteRepo = RemoteSessionRepository()
+    let syncService = SessionSyncService(
+        localRepository: localRepo,
+        remoteRepository: remoteRepo
+    )
+    let timerViewModel = TimerViewModel(sessionSync: syncService)
+    
+    TimerControlsView(timerViewModel: timerViewModel)
 }
