@@ -7,16 +7,17 @@
 //  Timer state management and core logic
 //
 
+import ActivityKit
 import Foundation
 import SwiftUI
 import UIKit
 
 /// Timer state for the state machine
 enum TimerState {
-    case idle // Timer not started
-    case running // Timer actively counting down
-    case paused // Timer paused
-    case completed // Timer finished
+    case idle  // Timer not started
+    case running  // Timer actively counting down
+    case paused  // Timer paused
+    case completed  // Timer finished
 }
 
 @MainActor
@@ -27,9 +28,12 @@ final class TimerViewModel: ObservableObject {
     @Published var currentState: TimerState = .idle
     @Published var currentSessionType: SessionType = .focus
     @Published var selectedPreset: TimerPreset = TimerPreset.defaults[0]
-    
+
     @Published var completedSessions: [Session] = []
     private let sessionSync: SessionSyncService
+
+    // Live Activity
+    private let activityManager = ActivityManager.shared
 
     // Computed properties
     var isRunning: Bool { currentState == .running }
@@ -44,7 +48,7 @@ final class TimerViewModel: ObservableObject {
 
         return String(format: "%02d:%02d", minutes, seconds)
     }
-    
+
     // Progress percentage (0.0 - 1.0)
     var progress: Double {
         guard totalSeconds > 0 else { return 0.0 }
@@ -73,7 +77,7 @@ final class TimerViewModel: ObservableObject {
         } catch {
             print("Failed to load sessions: \(error)")
         }
-    } 
+    }
 
     // Save session via sync service
     private func saveSession(_ session: Session) async {
@@ -103,7 +107,7 @@ final class TimerViewModel: ObservableObject {
     // MARK: - Timer Actions
     // Start a new timer session
     func start(preset: TimerPreset, sessionType: SessionType = .focus) {
-        stop() // Clear any existing timer
+        stop()  // Clear any existing timer
 
         selectedPreset = preset
         currentSessionType = sessionType
@@ -116,6 +120,17 @@ final class TimerViewModel: ObservableObject {
 
         // Add haptic feedback
         HapticManager.shared.light()
+
+        // Start Live Activity
+        Task {
+            await activityManager.startNewLiveActivity(
+                presetName: preset.durationTitle,
+                sessionType: sessionType,
+                totalSeconds: totalSeconds,
+                remainingSeconds: remainingSeconds,
+                isRunning: true
+            )
+        }
     }
 
     // Pause the current timer
@@ -127,6 +142,16 @@ final class TimerViewModel: ObservableObject {
 
         // Add haptic feedback
         HapticManager.shared.light()
+
+        // Update Live Activity to show paused state
+        Task {
+            await activityManager.updateLiveActivity(
+                sessionType: currentSessionType,
+                totalSeconds: totalSeconds,
+                remainingSeconds: remainingSeconds,
+                isRunning: false
+            )
+        }
     }
 
     // Resume the paused timer
@@ -138,6 +163,16 @@ final class TimerViewModel: ObservableObject {
 
         // Add haptic feedback
         HapticManager.shared.medium()
+
+        // Update Live Activity to show running state
+        Task {
+            await activityManager.updateLiveActivity(
+                sessionType: currentSessionType,
+                totalSeconds: totalSeconds,
+                remainingSeconds: remainingSeconds,
+                isRunning: true
+            )
+        }
     }
 
     // Stop and reset the timer
@@ -150,6 +185,11 @@ final class TimerViewModel: ObservableObject {
 
         // Add haptic feedback
         HapticManager.shared.warning()
+
+        // End Live Activity
+        Task {
+            await activityManager.endLiveActivity()
+        }
     }
 
     // Skip to break (when in focus session)
@@ -186,17 +226,39 @@ final class TimerViewModel: ObservableObject {
         }
 
         remainingSeconds -= 1
+
+        // Update Live Activity every second
+        Task {
+            await activityManager.updateLiveActivity(
+                sessionType: currentSessionType,
+                totalSeconds: totalSeconds,
+                remainingSeconds: remainingSeconds,
+                isRunning: isRunning
+            )
+        }
     }
 
     private func timerCompleted() {
         currentState = .completed
         stopTimer()
 
-        // Add haptic feedback
-        HapticManager.shared.success()
-
         // Save completed session
         completeCurrentSession()
+        HapticManager.shared.success()
+
+        // Create final state for Live Activity
+        let finalState = TimerActivityAttributes.ContentState(
+            sessionType: currentSessionType,
+            totalSeconds: totalSeconds,
+            remainingSeconds: 0,
+            isRunning: false,
+            endTime: Date()
+        )
+
+        // End Live Activity with completion state
+        Task {
+            await activityManager.endLiveActivity(with: finalState)
+        }
 
         // Auto-transition to break or notify completion
         autoTransition()
@@ -223,11 +285,12 @@ final class TimerViewModel: ObservableObject {
         if currentSessionType == .focus {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 let breakDuration = SessionType.shortBreak.defaultMinutes
-                let breakPreset = TimerPreset(durationTitle: "\(breakDuration)", minutes: breakDuration)
+                let breakPreset = TimerPreset(
+                    durationTitle: "\(breakDuration)", minutes: breakDuration)
 
                 self.start(preset: breakPreset, sessionType: .shortBreak)
             }
-        } 
+        }
         // After break, return to idle state
         else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {

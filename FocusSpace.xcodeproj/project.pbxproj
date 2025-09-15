@@ -7,11 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C0BDD4FA2E76CFA500E69A6B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BDD4F92E76CFA500E69A6B /* WidgetKit.framework */; };
+		C0BDD4FC2E76CFA500E69A6B /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BDD4FB2E76CFA500E69A6B /* SwiftUI.framework */; };
+		C0BDD50D2E76CFA700E69A6B /* FocusSpaceWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C0BDD4F72E76CFA500E69A6B /* FocusSpaceWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C0CAEB8C2E5B0D280035D5D1 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = C0CAEB8B2E5B0D280035D5D1 /* Auth */; };
 		C0CAEB8E2E5B0D280035D5D1 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = C0CAEB8D2E5B0D280035D5D1 /* Supabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C0BDD50B2E76CFA700E69A6B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0CAEB3E2E58B8020035D5D1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0BDD4F62E76CFA500E69A6B;
+			remoteInfo = FocusSpaceWidgetsExtension;
+		};
 		C0CAEB542E58B8040035D5D1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C0CAEB3E2E58B8020035D5D1 /* Project object */;
@@ -28,15 +38,80 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		C0BDD50E2E76CFA700E69A6B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C0BDD50D2E76CFA700E69A6B /* FocusSpaceWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		C0BDD4F72E76CFA500E69A6B /* FocusSpaceWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FocusSpaceWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0BDD4F92E76CFA500E69A6B /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		C0BDD4FB2E76CFA500E69A6B /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		C0CAEB462E58B8020035D5D1 /* FocusSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FocusSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0CAEB532E58B8040035D5D1 /* FocusSpaceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FocusSpaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0CAEB5D2E58B8040035D5D1 /* FocusSpaceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FocusSpaceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0D802E62E7856C400853307 /* FocusSpaceWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FocusSpaceWidgetsExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C0BDD49F2E76CDC600E69A6B /* Exceptions for "FocusSpace" folder in "FocusSpace" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C0CAEB452E58B8020035D5D1 /* FocusSpace */;
+		};
+		C0BDD5122E76CFA700E69A6B /* Exceptions for "FocusSpaceWidgets" folder in "FocusSpaceWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C0BDD4F62E76CFA500E69A6B /* FocusSpaceWidgetsExtension */;
+		};
+		C0BDD5182E76D03500E69A6B /* Exceptions for "FocusSpace" folder in "FocusSpaceWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Core/Models/Session.swift,
+				Core/Models/TimerActivityAttributes.swift,
+				Core/Models/TimerPreset.swift,
+				Data/Services/ActivityManager.swift,
+			);
+			target = C0BDD4F62E76CFA500E69A6B /* FocusSpaceWidgetsExtension */;
+		};
+		C0BDD51E2E76D25800E69A6B /* Exceptions for "FocusSpaceWidgets" folder in "FocusSpace" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				LockScreenLiveActivityView.swift,
+			);
+			target = C0CAEB452E58B8020035D5D1 /* FocusSpace */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		C0BDD4FD2E76CFA500E69A6B /* FocusSpaceWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C0BDD51E2E76D25800E69A6B /* Exceptions for "FocusSpaceWidgets" folder in "FocusSpace" target */,
+				C0BDD5122E76CFA700E69A6B /* Exceptions for "FocusSpaceWidgets" folder in "FocusSpaceWidgetsExtension" target */,
+			);
+			path = FocusSpaceWidgets;
+			sourceTree = "<group>";
+		};
 		C0CAEB482E58B8020035D5D1 /* FocusSpace */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C0BDD49F2E76CDC600E69A6B /* Exceptions for "FocusSpace" folder in "FocusSpace" target */,
+				C0BDD5182E76D03500E69A6B /* Exceptions for "FocusSpace" folder in "FocusSpaceWidgetsExtension" target */,
+			);
 			path = FocusSpace;
 			sourceTree = "<group>";
 		};
@@ -53,6 +128,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C0BDD4F42E76CFA500E69A6B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0BDD4FC2E76CFA500E69A6B /* SwiftUI.framework in Frameworks */,
+				C0BDD4FA2E76CFA500E69A6B /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0CAEB432E58B8020035D5D1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -79,12 +163,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C0BDD4F82E76CFA500E69A6B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C0BDD4F92E76CFA500E69A6B /* WidgetKit.framework */,
+				C0BDD4FB2E76CFA500E69A6B /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C0CAEB3D2E58B8020035D5D1 = {
 			isa = PBXGroup;
 			children = (
+				C0D802E62E7856C400853307 /* FocusSpaceWidgetsExtension.entitlements */,
 				C0CAEB482E58B8020035D5D1 /* FocusSpace */,
 				C0CAEB562E58B8040035D5D1 /* FocusSpaceTests */,
 				C0CAEB602E58B8040035D5D1 /* FocusSpaceUITests */,
+				C0BDD4FD2E76CFA500E69A6B /* FocusSpaceWidgets */,
+				C0BDD4F82E76CFA500E69A6B /* Frameworks */,
 				C0CAEB472E58B8020035D5D1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -95,6 +191,7 @@
 				C0CAEB462E58B8020035D5D1 /* FocusSpace.app */,
 				C0CAEB532E58B8040035D5D1 /* FocusSpaceTests.xctest */,
 				C0CAEB5D2E58B8040035D5D1 /* FocusSpaceUITests.xctest */,
+				C0BDD4F72E76CFA500E69A6B /* FocusSpaceWidgetsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,6 +199,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		C0BDD4F62E76CFA500E69A6B /* FocusSpaceWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0BDD5112E76CFA700E69A6B /* Build configuration list for PBXNativeTarget "FocusSpaceWidgetsExtension" */;
+			buildPhases = (
+				C0BDD4F32E76CFA500E69A6B /* Sources */,
+				C0BDD4F42E76CFA500E69A6B /* Frameworks */,
+				C0BDD4F52E76CFA500E69A6B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C0BDD4FD2E76CFA500E69A6B /* FocusSpaceWidgets */,
+			);
+			name = FocusSpaceWidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = FocusSpaceWidgetsExtension;
+			productReference = C0BDD4F72E76CFA500E69A6B /* FocusSpaceWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		C0CAEB452E58B8020035D5D1 /* FocusSpace */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C0CAEB672E58B8040035D5D1 /* Build configuration list for PBXNativeTarget "FocusSpace" */;
@@ -109,10 +228,12 @@
 				C0CAEB422E58B8020035D5D1 /* Sources */,
 				C0CAEB432E58B8020035D5D1 /* Frameworks */,
 				C0CAEB442E58B8020035D5D1 /* Resources */,
+				C0BDD50E2E76CFA700E69A6B /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C0BDD50C2E76CFA700E69A6B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				C0CAEB482E58B8020035D5D1 /* FocusSpace */,
@@ -182,6 +303,9 @@
 				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1640;
 				TargetAttributes = {
+					C0BDD4F62E76CFA500E69A6B = {
+						CreatedOnToolsVersion = 16.4;
+					};
 					C0CAEB452E58B8020035D5D1 = {
 						CreatedOnToolsVersion = 16.4;
 					};
@@ -215,11 +339,19 @@
 				C0CAEB452E58B8020035D5D1 /* FocusSpace */,
 				C0CAEB522E58B8040035D5D1 /* FocusSpaceTests */,
 				C0CAEB5C2E58B8040035D5D1 /* FocusSpaceUITests */,
+				C0BDD4F62E76CFA500E69A6B /* FocusSpaceWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		C0BDD4F52E76CFA500E69A6B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0CAEB442E58B8020035D5D1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -244,6 +376,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		C0BDD4F32E76CFA500E69A6B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0CAEB422E58B8020035D5D1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -268,6 +407,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C0BDD50C2E76CFA700E69A6B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0BDD4F62E76CFA500E69A6B /* FocusSpaceWidgetsExtension */;
+			targetProxy = C0BDD50B2E76CFA700E69A6B /* PBXContainerItemProxy */;
+		};
 		C0CAEB552E58B8040035D5D1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C0CAEB452E58B8020035D5D1 /* FocusSpace */;
@@ -281,6 +425,62 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		C0BDD50F2E76CFA700E69A6B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = FocusSpaceWidgetsExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 45C3927649;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusSpaceWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FocusSpaceWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boopannachai.FocusSpace.FocusSpaceWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C0BDD5102E76CFA700E69A6B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = FocusSpaceWidgetsExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 45C3927649;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusSpaceWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FocusSpaceWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boopannachai.FocusSpace.FocusSpaceWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		C0CAEB652E58B8040035D5D1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -407,17 +607,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FocusSpace/FocusSpace.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 45C3927649;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusSpace/Info.plist;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -440,17 +644,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FocusSpace/FocusSpace.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 45C3927649;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusSpace/Info.plist;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -543,6 +751,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C0BDD5112E76CFA700E69A6B /* Build configuration list for PBXNativeTarget "FocusSpaceWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0BDD50F2E76CFA700E69A6B /* Debug */,
+				C0BDD5102E76CFA700E69A6B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C0CAEB412E58B8020035D5D1 /* Build configuration list for PBXProject "FocusSpace" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
