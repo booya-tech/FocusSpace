@@ -11,7 +11,7 @@ import WidgetKit
 
 struct LockScreenLiveActivityView: View {
     let context: ActivityViewContext<TimerActivityAttributes>
-    
+
     var body: some View {
         VStack(spacing: 12) {
             // Header with session type and time
@@ -20,32 +20,41 @@ struct LockScreenLiveActivityView: View {
                     Circle()
                         .fill(context.state.sessionType.color)
                         .frame(width: 10, height: 10)
-                    
+
                     Text(context.state.sessionType.displayName)
                         .font(.subheadline)
                         .fontWeight(.medium)
                 }
-                
+
                 Spacer()
-                
-                Text(context.state.timeDisplay)
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .monospacedDigit()
+
+                if context.state.isRunning {
+                    Text(timerInterval: Date()...context.state.endTime, countsDown: true)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .monospacedDigit()
+                        .multilineTextAlignment(.trailing)
+                } else {
+                    Text(context.state.timeDisplay)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .monospacedDigit()
+                }
             }
-            
+
             // Progress section
             VStack(spacing: 4) {
                 ProgressView(value: context.state.progress)
-                    .progressViewStyle(LinearProgressViewStyle(tint: context.state.sessionType.color))
-                
+                    .progressViewStyle(
+                        LinearProgressViewStyle(tint: context.state.sessionType.color))
+
                 HStack {
                     Text(context.attributes.presetName)
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    
+
                     Spacer()
-                    
+
                     HStack(spacing: 4) {
                         Image(systemName: context.state.isRunning ? "play.fill" : "pause.fill")
                             .font(.caption2)

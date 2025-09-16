@@ -51,7 +51,6 @@ final class ActivityManager: ObservableObject {
         let contentState = TimerActivityAttributes.ContentState(
             sessionType: sessionType,
             totalSeconds: totalSeconds,
-            remainingSeconds: remainingSeconds,
             isRunning: isRunning,
             endTime: Date().addingTimeInterval(TimeInterval(remainingSeconds))
         )
@@ -98,7 +97,6 @@ final class ActivityManager: ObservableObject {
         let contentState = TimerActivityAttributes.ContentState(
             sessionType: sessionType,
             totalSeconds: totalSeconds,
-            remainingSeconds: remainingSeconds,
             isRunning: isRunning,
             endTime: Date().addingTimeInterval(TimeInterval(remainingSeconds))
         )

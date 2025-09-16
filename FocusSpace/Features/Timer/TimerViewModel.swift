@@ -228,14 +228,14 @@ final class TimerViewModel: ObservableObject {
         remainingSeconds -= 1
 
         // Update Live Activity every second
-        Task {
-            await activityManager.updateLiveActivity(
-                sessionType: currentSessionType,
-                totalSeconds: totalSeconds,
-                remainingSeconds: remainingSeconds,
-                isRunning: isRunning
-            )
-        }
+        // Task {
+        //     await activityManager.updateLiveActivity(
+        //         sessionType: currentSessionType,
+        //         totalSeconds: totalSeconds,
+        //         remainingSeconds: remainingSeconds,
+        //         isRunning: isRunning
+        //     )
+        // }
     }
 
     private func timerCompleted() {
@@ -250,7 +250,6 @@ final class TimerViewModel: ObservableObject {
         let finalState = TimerActivityAttributes.ContentState(
             sessionType: currentSessionType,
             totalSeconds: totalSeconds,
-            remainingSeconds: 0,
             isRunning: false,
             endTime: Date()
         )

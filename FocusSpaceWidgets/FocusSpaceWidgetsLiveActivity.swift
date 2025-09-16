@@ -79,7 +79,6 @@ struct FocusSpaceWidgetsLiveActivity: Widget {
     TimerActivityAttributes.ContentState(
         sessionType: .focus,
         totalSeconds: 1500,
-        remainingSeconds: 900,
         isRunning: true,
         endTime: Date().addingTimeInterval(900)
     )
@@ -87,7 +86,6 @@ struct FocusSpaceWidgetsLiveActivity: Widget {
     TimerActivityAttributes.ContentState(
         sessionType: .shortBreak,
         totalSeconds: 300,
-        remainingSeconds: 120,
         isRunning: false,
         endTime: Date().addingTimeInterval(120)
     )
