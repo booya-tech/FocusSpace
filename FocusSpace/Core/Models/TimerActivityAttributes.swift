@@ -24,7 +24,7 @@ struct TimerActivityAttributes: ActivityAttributes {
         var progress: Double {
             guard totalSeconds > 0 else { return 0.0 }
             let elapsed = Date().timeIntervalSince(startTime)
-            return min(elapsed / Double(totalSeconds), 1.0)
+            return min(max(elapsed / Double(totalSeconds), 0.0), 1.0)
         }
 
         private var startTime: Date {

@@ -40,7 +40,6 @@ struct FocusSpaceWidgetsLiveActivity: Widget {
                     HStack {
                         ProgressView(value: context.state.progress)
                             .progressViewStyle(LinearProgressViewStyle(tint: context.state.sessionType.color))
-                        
                         Image(systemName: context.state.isRunning ? "pause.fill" : "play.fill")
                             .font(.caption)
                             .foregroundColor(.secondary)
@@ -55,8 +54,8 @@ struct FocusSpaceWidgetsLiveActivity: Widget {
             } compactTrailing: {
                 // Compact trailing (right side of notch) - time display
                 Text(context.state.timeDisplay)
-                    .font(.caption2)
-                    .fontWeight(.medium)
+                    .font(.caption)
+                    .fontWeight(.semibold)
                     .monospacedDigit()
             } minimal: {
                 // Minimal state (when another activity takes priority)
@@ -67,7 +66,6 @@ struct FocusSpaceWidgetsLiveActivity: Widget {
         }
     }
 }
-
 
 // MARK: - Preview
 #Preview("Live Activity", as: .content, using: TimerActivityAttributes(

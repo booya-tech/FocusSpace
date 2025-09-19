@@ -28,8 +28,8 @@ final class TimerViewModel: ObservableObject {
     @Published var currentState: TimerState = .idle
     @Published var currentSessionType: SessionType = .focus
     @Published var selectedPreset: TimerPreset = TimerPreset.defaults[0]
-
     @Published var completedSessions: [Session] = []
+    @Published private(set) var sessionEndTime: Date?
     private let sessionSync: SessionSyncService
 
     // Live Activity
@@ -113,6 +113,7 @@ final class TimerViewModel: ObservableObject {
         currentSessionType = sessionType
         totalSeconds = preset.minutes * 60
         remainingSeconds = totalSeconds
+        sessionEndTime = Date().addingTimeInterval(TimeInterval(totalSeconds))
         sessionStartTime = Date()
         currentState = .running
 
@@ -180,6 +181,7 @@ final class TimerViewModel: ObservableObject {
         currentState = .idle
         stopTimer()
         remainingSeconds = 0
+        sessionEndTime = nil
         totalSeconds = 0
         sessionStartTime = nil
 
@@ -220,22 +222,27 @@ final class TimerViewModel: ObservableObject {
     }
 
     private func timerTick() {
-        guard remainingSeconds > 0 else {
+        guard let endTime = sessionEndTime else { return }
+
+        let remaining = max(0, Int(endTime.timeIntervalSince(Date())))
+        remainingSeconds = remaining
+
+        guard remaining > 0 else {
             timerCompleted()
             return
         }
 
-        remainingSeconds -= 1
-
-        // Update Live Activity every second
-        // Task {
-        //     await activityManager.updateLiveActivity(
-        //         sessionType: currentSessionType,
-        //         totalSeconds: totalSeconds,
-        //         remainingSeconds: remainingSeconds,
-        //         isRunning: isRunning
-        //     )
-        // }
+            // Update Live Activity progress every 5 seconds (not every second to avoid throttling)
+        if remaining % 5 == 0 {
+            Task {
+                await activityManager.updateLiveActivity(
+                    sessionType: currentSessionType,
+                    totalSeconds: totalSeconds,
+                    remainingSeconds: remaining,
+                    isRunning: true
+                )
+            }
+        }
     }
 
     private func timerCompleted() {
