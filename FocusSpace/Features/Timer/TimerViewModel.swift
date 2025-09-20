@@ -30,6 +30,9 @@ final class TimerViewModel: ObservableObject {
     @Published var selectedPreset: TimerPreset = TimerPreset.defaults[0]
     @Published var completedSessions: [Session] = []
     @Published private(set) var sessionEndTime: Date?
+    // Notification Manager
+    @Published var notificationManager = NotificationManager.shared
+
     private let sessionSync: SessionSyncService
 
     // Live Activity
@@ -132,6 +135,27 @@ final class TimerViewModel: ObservableObject {
                 isRunning: true
             )
         }
+        
+        Task {
+            await notificationManager.debugAuthorizationStatus()
+        }
+
+        Task {
+            await notificationManager.scheduleTimerCompletion(
+                for: sessionType,
+                in: TimeInterval(totalSeconds),
+                presetName: preset.durationTitle
+            )
+        }
+
+        Task {
+            await notificationManager.debugPendingNotifications()
+        }
+
+        print("🔍 Timer Debug:")
+        print("   Session Type: \(sessionType.displayName)")
+        print("   Total Seconds: \(totalSeconds)")
+        print("   Preset Name: \(preset.durationTitle)")
     }
 
     // Pause the current timer
@@ -153,6 +177,8 @@ final class TimerViewModel: ObservableObject {
                 isRunning: false
             )
         }
+
+        notificationManager.cancelAllTimerNotifications()
     }
 
     // Resume the paused timer
@@ -174,6 +200,10 @@ final class TimerViewModel: ObservableObject {
                 isRunning: true
             )
         }
+
+        Task {
+            await notificationManager.scheduleTimerCompletion(for: currentSessionType, in: TimeInterval(remainingSeconds), presetName: selectedPreset.durationTitle)
+        }
     }
 
     // Stop and reset the timer
@@ -192,6 +222,8 @@ final class TimerViewModel: ObservableObject {
         Task {
             await activityManager.endLiveActivity()
         }
+
+        notificationManager.cancelAllTimerNotifications()
     }
 
     // Skip to break (when in focus session)

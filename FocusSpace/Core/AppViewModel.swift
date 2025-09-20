@@ -9,15 +9,24 @@ import SwiftUI
 import Combine
 
 @MainActor
-final class AppViewModel: ObservableObject {
+final class AppViewModel: NSObject,ObservableObject {
     @Published var authService = AuthService()
+    @Published var notificationManager = NotificationManager.shared
 
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
+    override init() {
+        super.init()
+
         authService.$currentUser
-            .sink { [weak self] _ in
+            .sink { [weak self] user in
                 self?.objectWillChange.send()
+
+                if user != nil {
+                    Task {
+                        await self?.requestNotificationPermissions()
+                    }
+                }
             }
             .store(in: &cancellables)
     }
@@ -32,5 +41,10 @@ final class AppViewModel: ObservableObject {
         } catch {
             print("Sign out error: \(error.localizedDescription)")
         }
+    }
+
+    // Add notification permission request
+    private func requestNotificationPermissions() async {
+        await notificationManager.requestPermission()
     }
 }

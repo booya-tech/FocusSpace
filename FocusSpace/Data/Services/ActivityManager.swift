@@ -90,7 +90,6 @@ final class ActivityManager: ObservableObject {
         isRunning: Bool
     ) async {
         guard let activity = currentActivity else {
-            print("No active Live Activity to update")
             return
         }
         
