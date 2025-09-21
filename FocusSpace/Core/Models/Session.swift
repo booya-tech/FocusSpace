@@ -26,7 +26,7 @@ enum SessionType: String, CaseIterable, Codable {
         switch self {
             case .focus: return 25
             case .shortBreak: return 5
-            case .longBreak: return 15
+            case .longBreak: return 10
         }
     }
     

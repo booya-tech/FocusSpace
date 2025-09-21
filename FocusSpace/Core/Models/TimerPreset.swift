@@ -17,7 +17,7 @@ struct TimerPreset: Identifiable, Hashable {
 
     /// Default presets for the app
     static let defaults: [TimerPreset] = [
-        TimerPreset(durationTitle: "1", minutes: 1),
+        TimerPreset(durationTitle: "25", minutes: 25),
         TimerPreset(durationTitle: "30", minutes: 30),
         TimerPreset(durationTitle: "35", minutes: 35),
         TimerPreset(durationTitle: "40", minutes: 40),
