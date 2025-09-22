@@ -17,22 +17,42 @@ struct SettingsView: View {
                 Section("Timer Settings") {
                     // Custom Focus Durations
                     NavigationLink {
-                        // add view
+                        CustomDurationsView(
+                            title: "Focus Durations",
+                            durations: $preferences.customFocusDurations,
+                            range: 5...120
+                        )
                     } label: {
-                        
+                        SettingsRow(
+                            icon: "timer",
+                            title: "Focus Durations",
+                            subtitle: "\(preferences.customFocusDurations.count) presets"
+                        )
                     }
                     // Custom Break Durations
                     NavigationLink {
-                        // add view
+                        CustomDurationsView(
+                            title: "Break Durations",
+                            durations: $preferences.customBreakDurations,
+                            range: 1...30
+                        )
                     } label: {
-                        
+                        SettingsRow(
+                            icon: "pause.circle",
+                            title: "Break Durations",
+                            subtitle: "\(preferences.customBreakDurations.count) presets"
+                        )
                     }              
 
                     // Strict Mode Toggle
                     HStack {
-                        // add view
+                        SettingsRow(
+                            icon: "lock.circle",
+                            title: "Strict Mode",
+                            subtitle: "Disable pause/resume"
+                        )
                         Spacer()
-                        Toggle("", isOn: $preferences.isSoundEnabled)
+                        Toggle("", isOn: $preferences.isStrictModeEnabled)
                             .labelsHidden()
                     }     
                 }
@@ -40,9 +60,13 @@ struct SettingsView: View {
                 Section("Goal & Tracking") {
                     // Daily Focus Goal
                     NavigationLink {
-                        // add view
+                        DailyGoalView(goalMinutes: $preferences.dailyFocusGoal)
                     } label: {
-                        // add view
+                        SettingsRow(
+                            icon: "target",
+                            title: "Daily Focus Goal",
+                            subtitle: "\(preferences.dailyFocusGoal) minutes"
+                        )
                     }
                 }
 
@@ -50,16 +74,25 @@ struct SettingsView: View {
                 Section("Audio & Haptics") {
                     // Sound Toggle
                     HStack {
-                        // add view
+                        SettingsRow(
+                            icon: "speaker.wave.2",
+                            title: "Completion Sounds",
+                            subtitle: "Play sound when timer ends"
+                        )
                         Spacer()
                         Toggle("", isOn: $preferences.isSoundEnabled)
                             .labelsHidden()
                     }
                     // Haptics Toggle
                     HStack {
-                        // add view
+                        SettingsRow(
+                            icon: "iphone.radiowaves.left.and.right",
+                            title: "Haptic Feedback",
+                            subtitle: "Vibrate on timer events"
+                        )
                         Spacer()
                         Toggle("", isOn: $preferences.isHapticsEnabled)
+                            .labelsHidden()
                     }
                 }
 

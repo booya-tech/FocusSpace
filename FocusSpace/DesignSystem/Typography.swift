@@ -16,6 +16,8 @@ struct AppTypography {
     static let title1 = Font.title
     static let title2 = Font.title2
     static let title3 = Font.title3
+    static let headline = Font.headline
+    static let largeTitle = Font.largeTitle
 
     // Body Text
     static let body = Font.body
