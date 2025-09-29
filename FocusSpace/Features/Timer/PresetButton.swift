@@ -14,7 +14,9 @@ struct PresetButton: View {
     
     var body: some View {
         Button(action: {
-            HapticManager.shared.light()
+            if AppPreferences.shared.isHapticsEnabled {
+                HapticManager.shared.light()
+            }
             action()
         }) {
             Text("\(preset.minutes)m")

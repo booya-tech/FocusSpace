@@ -57,9 +57,6 @@ struct MainTabView: View {
             // Profile Tab (placeholder)
             NavigationView {
                 VStack {
-                    Text("Profile")
-                        .font(AppTypography.title2)
-
                     if let user = authService.currentUser {
                         Text("Email: \(user.email ?? "Unknown")")
                             .font(AppTypography.body)

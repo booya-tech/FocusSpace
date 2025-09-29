@@ -17,8 +17,19 @@ struct TimerControlsView: View {
                     timerViewModel.start(preset: timerViewModel.selectedPreset)
                 }
             } else if timerViewModel.isRunning {
-                PrimaryButton(title: "Pause") {
-                    timerViewModel.pause()
+                if !timerViewModel.preferences.isStrictModeEnabled {
+                    PrimaryButton(title: "Pause") {
+                        timerViewModel.pause()
+                    }
+                } else {
+                    VStack(spacing: 4) {
+                        Image(systemName: "lock.circle.fill")
+                            .foregroundColor(AppColors.accent)
+                            .font(.title3)
+                        Text("Strict Mode")
+                            .font(AppTypography.caption)
+                            .foregroundColor(AppColors.secondaryText)
+                    }
                 }
 
                 if timerViewModel.currentSessionType == .focus {

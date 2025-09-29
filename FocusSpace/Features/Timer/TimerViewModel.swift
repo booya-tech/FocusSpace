@@ -20,6 +20,10 @@ enum TimerState {
     case completed  // Timer finished
 }
 
+enum HapticType {
+    case light, medium, success, warning
+}
+
 @MainActor
 final class TimerViewModel: ObservableObject {
     // Published properties
@@ -32,6 +36,7 @@ final class TimerViewModel: ObservableObject {
     @Published private(set) var sessionEndTime: Date?
     // Notification Manager
     @Published var notificationManager = NotificationManager.shared
+    @Published var preferences = AppPreferences.shared
 
     private let sessionSync: SessionSyncService
 
@@ -122,8 +127,7 @@ final class TimerViewModel: ObservableObject {
 
         startTimer()
 
-        // Add haptic feedback
-        HapticManager.shared.light()
+        triggerHaptic(.light)
 
         // Start Live Activity
         Task {
@@ -165,8 +169,7 @@ final class TimerViewModel: ObservableObject {
         currentState = .paused
         stopTimer()
 
-        // Add haptic feedback
-        HapticManager.shared.light()
+        triggerHaptic(.light)
 
         // Update Live Activity to show paused state
         Task {
@@ -188,8 +191,7 @@ final class TimerViewModel: ObservableObject {
         currentState = .running
         startTimer()
 
-        // Add haptic feedback
-        HapticManager.shared.medium()
+        triggerHaptic(.medium)
 
         // Update Live Activity to show running state
         Task {
@@ -215,8 +217,7 @@ final class TimerViewModel: ObservableObject {
         totalSeconds = 0
         sessionStartTime = nil
 
-        // Add haptic feedback
-        HapticManager.shared.warning()
+        triggerHaptic(.warning)
 
         // End Live Activity
         Task {
@@ -283,7 +284,7 @@ final class TimerViewModel: ObservableObject {
 
         // Save completed session
         completeCurrentSession()
-        HapticManager.shared.success()
+        triggerHaptic(.success)
 
         // Create final state for Live Activity
         let finalState = TimerActivityAttributes.ContentState(
@@ -314,7 +315,7 @@ final class TimerViewModel: ObservableObject {
 
         Task {
             await saveSession(session)
-            HapticManager.shared.success()
+            triggerHaptic(.success)
         }
     }
 
@@ -334,6 +335,16 @@ final class TimerViewModel: ObservableObject {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 self.stop()
             }
+        }
+    }
+
+    private func triggerHaptic(_ type: HapticType) {
+        guard preferences.isHapticsEnabled else { return }
+        switch type {
+        case .light: HapticManager.shared.light()
+        case .medium: HapticManager.shared.medium()
+        case .success: HapticManager.shared.success()
+        case .warning: HapticManager.shared.warning()
         }
     }
 }
