@@ -33,8 +33,14 @@ struct TimerControlsView: View {
                 }
 
                 if timerViewModel.currentSessionType == .focus {
-                    PrimaryButton(title: "Skip to Break", isDestructive: true) {
-                        timerViewModel.skipToBreak()
+                    if timerViewModel.preferences.isStrictModeEnabled {
+                        PrimaryButton(title: "Stop Session", isDestructive: true) {
+                            timerViewModel.stop()
+                        }
+                    } else {
+                        PrimaryButton(title: "Skip to Break", isDestructive: true) {
+                            timerViewModel.skipToBreak()
+                        }
                     }
                 }
             } else if timerViewModel.isPaused {
