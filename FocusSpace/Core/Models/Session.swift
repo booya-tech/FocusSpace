@@ -7,8 +7,9 @@
 
 
 import Foundation
+import SwiftUI
 
-enum SessionType: String, CaseIterable {
+enum SessionType: String, CaseIterable, Codable {
     case focus = "focus"
     case shortBreak = "short_break"
     case longBreak = "long_break"
@@ -21,11 +22,20 @@ enum SessionType: String, CaseIterable {
         }
     }
 
-    var displayMinutes: Int {
+    var defaultMinutes: Int {
         switch self {
             case .focus: return 25
             case .shortBreak: return 5
-            case .longBreak: return 15
+            case .longBreak: return 10
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .focus:
+            return .green
+        case .shortBreak, .longBreak:
+            return .orange
         }
     }
 }

@@ -7,15 +7,21 @@
 //  Timer state management and core logic
 //
 
+import ActivityKit
 import Foundation
 import SwiftUI
+import UIKit
 
 /// Timer state for the state machine
 enum TimerState {
-    case idle // Timer not started
-    case running // Timer actively counting down
-    case paused // Timer paused
-    case completed // Timer finished
+    case idle  // Timer not started
+    case running  // Timer actively counting down
+    case paused  // Timer paused
+    case completed  // Timer finished
+}
+
+enum HapticType {
+    case light, medium, success, warning
 }
 
 @MainActor
@@ -25,8 +31,17 @@ final class TimerViewModel: ObservableObject {
     @Published var totalSeconds: Int = 0
     @Published var currentState: TimerState = .idle
     @Published var currentSessionType: SessionType = .focus
-    @Published var selectedPresent: TimerPreset = TimerPreset.defaults[0]
+    @Published var selectedPreset: TimerPreset = TimerPreset.defaults[0]
     @Published var completedSessions: [Session] = []
+    @Published private(set) var sessionEndTime: Date?
+    // Notification Manager
+    @Published var notificationManager = NotificationManager.shared
+    @Published var preferences = AppPreferences.shared
+
+    private let sessionSync: SessionSyncService
+
+    // Live Activity
+    private let activityManager = ActivityManager.shared
 
     // Computed properties
     var isRunning: Bool { currentState == .running }
@@ -41,7 +56,7 @@ final class TimerViewModel: ObservableObject {
 
         return String(format: "%02d:%02d", minutes, seconds)
     }
-    
+
     // Progress percentage (0.0 - 1.0)
     var progress: Double {
         guard totalSeconds > 0 else { return 0.0 }
@@ -52,19 +67,99 @@ final class TimerViewModel: ObservableObject {
     private var timer: Timer?
     private var sessionStartTime: Date?
 
+    // Initialization
+    init(sessionSync: SessionSyncService) {
+        self.sessionSync = sessionSync
+
+        Task {
+            await loadSessions()
+        }
+    }
+
+    private func loadSessions() async {
+        do {
+            let sessions = try await sessionSync.getSessions()
+            await MainActor.run {
+                self.completedSessions = sessions
+            }
+        } catch {
+            print("Failed to load sessions: \(error)")
+        }
+    }
+
+    // Save session via sync service
+    private func saveSession(_ session: Session) async {
+        do {
+            try await sessionSync.saveSession(session)
+            await loadSessions()
+        } catch {
+            print("Failed to save session: \(error)")
+        }
+    }
+
+    // Sync methods
+    func syncNow() async {
+        do {
+            try await sessionSync.syncNow()
+            await loadSessions()
+        } catch {
+            print("Sync failed: \(error)")
+        }
+    }
+
+    func syncOnForeground() async {
+        await sessionSync.syncOnAppForeground()
+        await loadSessions()
+    }
+
     // MARK: - Timer Actions
     // Start a new timer session
     func start(preset: TimerPreset, sessionType: SessionType = .focus) {
-        stop() // Clear any existing timer
+        stop()  // Clear any existing timer
 
-        selectedPresent = preset
+        selectedPreset = preset
         currentSessionType = sessionType
         totalSeconds = preset.minutes * 60
         remainingSeconds = totalSeconds
+        sessionEndTime = Date().addingTimeInterval(TimeInterval(totalSeconds))
         sessionStartTime = Date()
         currentState = .running
 
         startTimer()
+
+        triggerHaptic(.light)
+
+        // Start Live Activity
+        Task {
+            await activityManager.startNewLiveActivity(
+                presetName: preset.durationTitle,
+                sessionType: sessionType,
+                totalSeconds: totalSeconds,
+                remainingSeconds: remainingSeconds,
+                isRunning: true
+            )
+        }
+        
+        Task {
+            await notificationManager.debugAuthorizationStatus()
+        }
+
+        Task {
+            await notificationManager.scheduleTimerCompletion(
+                for: sessionType,
+                in: TimeInterval(totalSeconds),
+                presetName: preset.durationTitle
+            )
+        }
+
+        Task {
+            await notificationManager.debugPendingNotifications()
+        }
+
+        print("🔍 Timer Debug:")
+        print("   Session Type: \(sessionType.displayName)")
+        print("   Total Seconds: \(totalSeconds)")
+        print("   Preset Name: \(preset.durationTitle)")
     }
 
     // Pause the current timer
@@ -73,6 +168,20 @@ final class TimerViewModel: ObservableObject {
 
         currentState = .paused
         stopTimer()
+
+        triggerHaptic(.light)
+
+        // Update Live Activity to show paused state
+        Task {
+            await activityManager.updateLiveActivity(
+                sessionType: currentSessionType,
+                totalSeconds: totalSeconds,
+                remainingSeconds: remainingSeconds,
+                isRunning: false
+            )
+        }
+
+        notificationManager.cancelAllTimerNotifications()
     }
 
     // Resume the paused timer
@@ -81,6 +190,22 @@ final class TimerViewModel: ObservableObject {
 
         currentState = .running
         startTimer()
+
+        triggerHaptic(.medium)
+
+        // Update Live Activity to show running state
+        Task {
+            await activityManager.updateLiveActivity(
+                sessionType: currentSessionType,
+                totalSeconds: totalSeconds,
+                remainingSeconds: remainingSeconds,
+                isRunning: true
+            )
+        }
+
+        Task {
+            await notificationManager.scheduleTimerCompletion(for: currentSessionType, in: TimeInterval(remainingSeconds), presetName: selectedPreset.durationTitle)
+        }
     }
 
     // Stop and reset the timer
@@ -88,8 +213,18 @@ final class TimerViewModel: ObservableObject {
         currentState = .idle
         stopTimer()
         remainingSeconds = 0
+        sessionEndTime = nil
         totalSeconds = 0
         sessionStartTime = nil
+
+        triggerHaptic(.warning)
+
+        // End Live Activity
+        Task {
+            await activityManager.endLiveActivity()
+        }
+
+        notificationManager.cancelAllTimerNotifications()
     }
 
     // Skip to break (when in focus session)
@@ -100,7 +235,7 @@ final class TimerViewModel: ObservableObject {
         completeCurrentSession()
 
         // Start short break
-        let breakDuration = SessionType.shortBreak.displayMinutes
+        let breakDuration = SessionType.shortBreak.defaultMinutes
         let breakPreset = TimerPreset(durationTitle: "\(breakDuration)", minutes: breakDuration)
         start(preset: breakPreset, sessionType: .shortBreak)
     }
@@ -120,12 +255,27 @@ final class TimerViewModel: ObservableObject {
     }
 
     private func timerTick() {
-        guard remainingSeconds > 0 else {
+        guard let endTime = sessionEndTime else { return }
+
+        let remaining = max(0, Int(endTime.timeIntervalSince(Date())))
+        remainingSeconds = remaining
+
+        guard remaining > 0 else {
             timerCompleted()
             return
         }
 
-        return remainingSeconds -= 1
+            // Update Live Activity progress every 5 seconds (not every second to avoid throttling)
+        if remaining % 5 == 0 {
+            Task {
+                await activityManager.updateLiveActivity(
+                    sessionType: currentSessionType,
+                    totalSeconds: totalSeconds,
+                    remainingSeconds: remaining,
+                    isRunning: true
+                )
+            }
+        }
     }
 
     private func timerCompleted() {
@@ -134,6 +284,20 @@ final class TimerViewModel: ObservableObject {
 
         // Save completed session
         completeCurrentSession()
+        triggerHaptic(.success)
+
+        // Create final state for Live Activity
+        let finalState = TimerActivityAttributes.ContentState(
+            sessionType: currentSessionType,
+            totalSeconds: totalSeconds,
+            isRunning: false,
+            endTime: Date()
+        )
+
+        // End Live Activity with completion state
+        Task {
+            await activityManager.endLiveActivity(with: finalState)
+        }
 
         // Auto-transition to break or notify completion
         autoTransition()
@@ -149,24 +313,38 @@ final class TimerViewModel: ObservableObject {
             tag: nil
         )
 
-        completedSessions.append(session)
+        Task {
+            await saveSession(session)
+            triggerHaptic(.success)
+        }
     }
 
     private func autoTransition() {
         // Auto-start break after focus session
         if currentSessionType == .focus {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                let breakDuration = SessionType.shortBreak.displayMinutes
-                let breakPreset = TimerPreset(durationTitle: "\(breakDuration)", minutes: breakDuration)
+                let breakDuration = SessionType.shortBreak.defaultMinutes
+                let breakPreset = TimerPreset(
+                    durationTitle: "\(breakDuration)", minutes: breakDuration)
 
                 self.start(preset: breakPreset, sessionType: .shortBreak)
             }
-        } 
+        }
         // After break, return to idle state
         else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 self.stop()
             }
+        }
+    }
+
+    private func triggerHaptic(_ type: HapticType) {
+        guard preferences.isHapticsEnabled else { return }
+        switch type {
+        case .light: HapticManager.shared.light()
+        case .medium: HapticManager.shared.medium()
+        case .success: HapticManager.shared.success()
+        case .warning: HapticManager.shared.warning()
         }
     }
 }

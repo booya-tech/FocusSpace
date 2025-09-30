@@ -8,26 +8,69 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var timerViewModel: TimerViewModel
+
     var body: some View {
-        VStack(spacing: 24) {
-            Text("25:00")
-                .font(AppTypography.timerLarge)
-                .foregroundColor(AppColors.primaryText)
+        NavigationStack {
+            VStack(spacing: 32) {
+                // Session type indicator
+                Text(timerViewModel.currentSessionType.displayName)
+                    .font(AppTypography.title3)
+                    .foregroundColor(AppColors.secondaryText)
 
-            Text("Focus Timer")
-                .font(AppTypography.title2)
-                .foregroundColor(AppColors.secondaryText)
+                // Timer display
+                VStack(spacing: 8) {
+                    Text(timerViewModel.formattedTime)
+                        .font(AppTypography.timerLarge)
+                        .foregroundColor(AppColors.primaryText)
+                        .monospacedDigit()
 
-            PrimaryButton(title: "Start Focus Session", action: {
-                // TODO: Implement timer start
-            })
+                    // Progress indicator
+                    if !timerViewModel.isIdle {
+                        ProgressView(value: timerViewModel.progress)
+                            .progressViewStyle(LinearProgressViewStyle(tint: AppColors.accent))
+                            .frame(width: 200)
+                    }
+                }
+
+                // Preset selection (only when idle)
+                if timerViewModel.isIdle {
+                    PresetSelectionView(
+                        selectedPreset: $timerViewModel.selectedPreset,
+                        presets: timerViewModel.preferences.currentTimerPresets
+                    )
+                }
+
+                // Timer controls
+                TimerControlsView(timerViewModel: timerViewModel)
+
+                Spacer()
+            }
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(AppColors.background)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: SettingsView()) {
+                        Image(systemName: "gear")
+                            .font(.title3)
+                            .foregroundColor(AppColors.primaryText)
+                    }
+                }
+            }
         }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppColors.background)
     }
 }
 
 #Preview {
+    let localRepo = LocalSessionRepository()
+    let remoteRepo = RemoteSessionRepository()
+    let syncService = SessionSyncService(
+        localRepository: localRepo,
+        remoteRepository: remoteRepo
+    )
+    let timerViewModel = TimerViewModel(sessionSync: syncService)
+    
     ContentView()
+        .environmentObject(timerViewModel)
 }
