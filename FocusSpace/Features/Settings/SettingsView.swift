@@ -9,11 +9,9 @@ import SwiftUI
 
 struct SettingsView: View {
     @StateObject private var preferences = AppPreferences.shared
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        NavigationView {
-            List {
+        List {
                 Section("Timer Settings") {
                     // Custom Focus Durations
                     NavigationLink {
@@ -111,17 +109,8 @@ struct SettingsView: View {
                     }
                 }
             }
-        }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Done") {
-                    dismiss()
-                }
-                .font(AppTypography.body)
-            }
-        }
     }
 }
 

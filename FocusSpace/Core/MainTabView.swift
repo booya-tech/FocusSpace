@@ -33,7 +33,7 @@ struct MainTabView: View {
     var body: some View {
         TabView {
             // Timer Tab
-            NavigationView {
+            NavigationStack {
                 ContentView()
                     .environmentObject(timerViewModel)
                     .navigationTitle("Focus Timer")
@@ -55,7 +55,7 @@ struct MainTabView: View {
                 Text("Timer")
             }
             // Profile Tab (placeholder)
-            NavigationView {
+            NavigationStack {
                 VStack {
                     if let user = authService.currentUser {
                         Text("Email: \(user.email ?? "Unknown")")
@@ -80,7 +80,7 @@ struct MainTabView: View {
                 Text("Profile")
             }
             // Dashboard Tab
-            NavigationView {
+            NavigationStack {
                 DashboardView()
                     .environmentObject(timerViewModel)
             }

@@ -134,7 +134,7 @@ struct DashboardView: View {
     )
     let timerViewModel = TimerViewModel(sessionSync: syncService)
     
-    return NavigationView {
+    return NavigationStack {
         DashboardView()
             .environmentObject(timerViewModel)
     }

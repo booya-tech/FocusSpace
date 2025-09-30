@@ -11,7 +11,7 @@ struct ContentView: View {
     @EnvironmentObject var timerViewModel: TimerViewModel
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 32) {
                 // Session type indicator
                 Text(timerViewModel.currentSessionType.displayName)

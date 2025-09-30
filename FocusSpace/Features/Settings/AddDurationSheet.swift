@@ -15,51 +15,50 @@ struct AddDurationSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        NavigationView {
-            VStack(spacing: 32) {
-                VStack(spacing: 16) {
-                    Text("Add Custom Duration")
-                        .font(AppTypography.headline)
-                        .foregroundColor(AppColors.primaryText)
-                    
-                    Text("\(newDuration) minutes")
-                        .font(AppTypography.largeTitle)
-                        .foregroundColor(AppColors.accent)
-                        .fontWeight(.bold)
-                }
+        VStack(spacing: 32) {
+            Spacer()
+            VStack(spacing: 16) {
+                Text("Add Custom Duration")
+                    .font(AppTypography.headline)
+                    .foregroundColor(AppColors.primaryText)
                 
-                VStack(spacing: 24) {
-                    Text("Select Duration")
-                        .font(AppTypography.body)
-                        .foregroundColor(AppColors.secondaryText)
-                    
-                    Picker("Duration", selection: $newDuration) {
-                        ForEach(Array(range), id: \.self) { minutes in
-                            Text("\(minutes) min").tag(minutes)
-                        }
-                        .pickerStyle(.inline)
-                        .frame(height: 150)
+                Text("\(newDuration) minutes")
+                    .font(AppTypography.largeTitle)
+                    .foregroundColor(AppColors.accent)
+                    .fontWeight(.bold)
+            }
+            
+            VStack(spacing: 24) {
+                Text("Select Duration")
+                    .font(AppTypography.body)
+                    .foregroundColor(AppColors.secondaryText)
+                
+                Picker("Duration", selection: $newDuration) {
+                    ForEach(Array(range), id: \.self) { minutes in
+                        Text("\(minutes) min").tag(minutes)
                     }
-                    Spacer()
+                    .pickerStyle(.inline)
+                    .frame(height: 150)
                 }
-                .padding()
-                .navigationTitle("Add Duration")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Cancel") {
-                            dismiss()
-                        }
-                        .font(AppTypography.body)
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Add Duration")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
                     }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Add") {
-                            onAdd(newDuration)
-                            dismiss()
-                        }
-                        .font(AppTypography.body)
-                        .fontWeight(.semibold)
+                    .font(AppTypography.body)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Add") {
+                        onAdd(newDuration)
+                        dismiss()
                     }
+                    .font(AppTypography.body)
+                    .fontWeight(.semibold)
                 }
             }
         }
