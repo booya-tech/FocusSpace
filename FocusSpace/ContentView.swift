@@ -37,7 +37,9 @@ struct ContentView: View {
                 if timerViewModel.isIdle {
                     PresetSelectionView(
                         selectedPreset: $timerViewModel.selectedPreset,
-                        presets: timerViewModel.preferences.currentTimerPresets
+                        presets: timerViewModel.preferences.customFocusDurations.map { 
+                            TimerPreset(durationTitle: "\($0)", minutes: $0)
+                        }
                     )
                 }
 
@@ -51,7 +53,11 @@ struct ContentView: View {
             .background(AppColors.background)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: SettingsView()) {
+                    NavigationLink(destination: SettingsView()
+                        .onDisappear {
+                            timerViewModel.objectWillChange.send()
+                        }
+                    ) {
                         Image(systemName: "gear")
                             .font(.title3)
                             .foregroundColor(AppColors.primaryText)

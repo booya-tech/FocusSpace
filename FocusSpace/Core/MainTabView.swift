@@ -54,6 +54,15 @@ struct MainTabView: View {
                 Image(systemName: "timer")
                 Text("Timer")
             }
+            // Dashboard Tab
+            NavigationStack {
+                DashboardView()
+                    .environmentObject(timerViewModel)
+            }
+            .tabItem {
+                Image(systemName: "chart.bar.fill")
+                Text("Dashboard")
+            }
             // Profile Tab (placeholder)
             NavigationStack {
                 VStack {
@@ -78,15 +87,6 @@ struct MainTabView: View {
             .tabItem {
                 Image(systemName: "person.circle")
                 Text("Profile")
-            }
-            // Dashboard Tab
-            NavigationStack {
-                DashboardView()
-                    .environmentObject(timerViewModel)
-            }
-            .tabItem {
-                Image(systemName: "chart.bar.fill")
-                Text("Dashboard")
             }
         }
         .accentColor(AppColors.accent)

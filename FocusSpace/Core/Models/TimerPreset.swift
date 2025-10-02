@@ -11,7 +11,8 @@ import Foundation
 
 /// Predifined timer durations for focus sessions
 struct TimerPreset: Identifiable, Hashable {
-    let id = UUID()
+    // let id = UUID()
+    var id: Int { minutes }
     let durationTitle: String
     let minutes: Int
 

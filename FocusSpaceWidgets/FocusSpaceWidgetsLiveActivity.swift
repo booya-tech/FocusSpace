@@ -53,7 +53,7 @@ struct FocusSpaceWidgetsLiveActivity: Widget {
                     .frame(width: 12, height: 12)
             } compactTrailing: {
                 // Compact trailing (right side of notch) - time display
-                Text(context.state.timeDisplay)
+                Text(timerInterval: Date()...context.state.endTime, countsDown: true)
                     .font(.caption)
                     .fontWeight(.semibold)
                     .monospacedDigit()
