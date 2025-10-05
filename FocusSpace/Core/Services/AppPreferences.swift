@@ -22,8 +22,8 @@ final class AppPreferences: ObservableObject {
         didSet { defaults.set(customFocusDurations, forKey: "customFocusDurations") }
     }
     // Custom break durations (in minutes)
-    @Published var customBreakDurations: [Int] {
-        didSet { defaults.set(customBreakDurations, forKey: "customBreakDurations") }
+    @Published var selectedBreakDuration: Int {
+        didSet { defaults.set(selectedBreakDuration, forKey: "selectedBreakDuration") }
     }
     // Strict mode (disable pause/resume)
     @Published var isStrictModeEnabled: Bool {
@@ -48,7 +48,7 @@ final class AppPreferences: ObservableObject {
     // MARK: - Initialization
     private init() {
         self.customFocusDurations = defaults.object(forKey: "customFocusDurations") as? [Int] ?? [25, 30, 35, 40, 45, 50]
-        self.customBreakDurations = defaults.object(forKey: "customBreakDurations") as? [Int] ?? [5, 10]
+        self.selectedBreakDuration = defaults.object(forKey: "selectedBreakDuration") as? Int ?? 5
         self.isStrictModeEnabled = defaults.bool(forKey: "isStrictModeEnabled")
         self.dailyFocusGoal = defaults.object(forKey: "dailyFocusGoal") as? Int ?? 120
         self.isSoundEnabled = defaults.object(forKey: "isSoundEnabled") as? Bool ?? true
@@ -66,7 +66,7 @@ final class AppPreferences: ObservableObject {
     // Reset all preferences to defaults
     func resetToDefaults() {
         customFocusDurations = [25, 30, 35, 40, 45, 50]
-        customBreakDurations = [5, 10]
+        selectedBreakDuration = 5
         isStrictModeEnabled = false
         dailyFocusGoal = 120
         isSoundEnabled = true

@@ -38,7 +38,7 @@ struct MainTabView: View {
                 ContentView()
                     .environmentObject(timerViewModel)
                     .navigationTitle("Focus Timer")
-                    .navigationBarTitleDisplayMode(.inline)}
+                    .navigationBarTitleDisplayMode(.inline)
             }
             .tabItem {
                 Image(systemName: "timer")

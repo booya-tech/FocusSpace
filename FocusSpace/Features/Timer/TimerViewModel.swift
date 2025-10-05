@@ -235,7 +235,7 @@ final class TimerViewModel: ObservableObject {
         completeCurrentSession()
 
         // Start short break
-        let breakDuration = SessionType.longBreak.defaultMinutes
+        let breakDuration = preferences.selectedBreakDuration
         let breakPreset = TimerPreset(durationTitle: "\(breakDuration)", minutes: breakDuration)
         start(preset: breakPreset, sessionType: .longBreak)
     }
@@ -323,7 +323,7 @@ final class TimerViewModel: ObservableObject {
         // Auto-start break after focus session
         if currentSessionType == .focus {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                let breakDuration = SessionType.longBreak.defaultMinutes
+                let breakDuration = self.preferences.selectedBreakDuration
                 let breakPreset = TimerPreset(
                     durationTitle: "\(breakDuration)", minutes: breakDuration)
 

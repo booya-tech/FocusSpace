@@ -29,16 +29,14 @@ struct SettingsView: View {
                 }
                 // Custom Break Durations
                 NavigationLink {
-                    CustomDurationsView(
-                        title: "Break Durations",
-                        durations: $preferences.customBreakDurations,
-                        range: 1...30
+                    BreakDurationPickerView(
+                        selectedDuration: $preferences.selectedBreakDuration
                     )
                 } label: {
                     SettingsRow(
                         icon: "pause.circle",
                         title: "Break Durations",
-                        subtitle: "\(preferences.customBreakDurations.count) presets"
+                        subtitle: "\(preferences.selectedBreakDuration) presets"
                     )
                 }
                 
