@@ -16,6 +16,7 @@ struct MainTabView: View {
     // Sync Service
     @StateObject private var localRepository = LocalSessionRepository()
     @StateObject private var syncService: SessionSyncService
+    @State private var isSyncing = true
 
     // Initialization
     init() {
@@ -37,18 +38,7 @@ struct MainTabView: View {
                 ContentView()
                     .environmentObject(timerViewModel)
                     .navigationTitle("Focus Timer")
-                    .navigationBarTitleDisplayMode(.inline)
-                //                    .toolbar {
-                //                        ToolbarItem(placement: .navigationBarTrailing) {
-                //                            Button("Sign Out") {
-                //                                Task {
-                //                                    try? await authService.signOut()
-                //                                }
-                //                            }
-                //                            .font(AppTypography.caption)
-                //                            .foregroundColor(AppColors.secondaryText)
-                //                        }
-                //                    }
+                    .navigationBarTitleDisplayMode(.inline)}
             }
             .tabItem {
                 Image(systemName: "timer")
@@ -89,10 +79,16 @@ struct MainTabView: View {
                 Text("Profile")
             }
         }
+        .overlay {
+            if isSyncing {
+                LoadingView()
+            }
+        }
         .accentColor(AppColors.accent)
         .task {
             // Sync on app launch
             await timerViewModel.syncOnForeground()
+            isSyncing = false
         }
     }
 }

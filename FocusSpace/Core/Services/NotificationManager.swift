@@ -135,7 +135,7 @@ extension SessionType {
         switch self {
             case .focus: return "Focus Session Completed!"
             case .shortBreak: return "Break Time Over!"
-            case .longBreak: return "Long Break Finished!"
+            case .longBreak: return "Break Time Over!"
         }
     }
 

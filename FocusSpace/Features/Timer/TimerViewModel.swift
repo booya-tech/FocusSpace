@@ -235,9 +235,9 @@ final class TimerViewModel: ObservableObject {
         completeCurrentSession()
 
         // Start short break
-        let breakDuration = SessionType.shortBreak.defaultMinutes
+        let breakDuration = SessionType.longBreak.defaultMinutes
         let breakPreset = TimerPreset(durationTitle: "\(breakDuration)", minutes: breakDuration)
-        start(preset: breakPreset, sessionType: .shortBreak)
+        start(preset: breakPreset, sessionType: .longBreak)
     }
 
     // Skip the current break
@@ -264,8 +264,8 @@ final class TimerViewModel: ObservableObject {
             timerCompleted()
             return
         }
-
-            // Update Live Activity progress every 5 seconds (not every second to avoid throttling)
+        
+        // Update Live Activity progress every 5 seconds (not every second to avoid throttling)
         if remaining % 5 == 0 {
             Task {
                 await activityManager.updateLiveActivity(
@@ -323,11 +323,11 @@ final class TimerViewModel: ObservableObject {
         // Auto-start break after focus session
         if currentSessionType == .focus {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                let breakDuration = SessionType.shortBreak.defaultMinutes
+                let breakDuration = SessionType.longBreak.defaultMinutes
                 let breakPreset = TimerPreset(
                     durationTitle: "\(breakDuration)", minutes: breakDuration)
 
-                self.start(preset: breakPreset, sessionType: .shortBreak)
+                self.start(preset: breakPreset, sessionType: .longBreak)
             }
         }
         // After break, return to idle state
