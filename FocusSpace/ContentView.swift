@@ -20,10 +20,12 @@ struct ContentView: View {
 
                 // Timer display
                 VStack(spacing: 8) {
-                    Text(timerViewModel.formattedTime)
-                        .font(AppTypography.timerLarge)
-                        .foregroundColor(AppColors.primaryText)
-                        .monospacedDigit()
+                    CoffeeCupTimerView(
+                        progress: timerViewModel.progress,
+                        sessionType: timerViewModel.currentSessionType,
+                        formattedTime: timerViewModel.formattedTime
+                    )
+                    
 
                     // Progress indicator
                     if !timerViewModel.isIdle {

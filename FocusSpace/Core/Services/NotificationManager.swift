@@ -142,7 +142,7 @@ extension SessionType {
     func notificationBody(presetName: String) -> String {
         switch self {
         case .focus:
-            return "Great work! Your \(presetName)-minute focus session is done. Time for a break!"
+            return "Great work! Your \(presetName)-minute focus session is done. Open the app to start your break."
         case .shortBreak:
             return "Ready to get back to work? Your break is over."
         case .longBreak:
