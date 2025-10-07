@@ -23,7 +23,8 @@ struct ContentView: View {
                     CoffeeCupTimerView(
                         progress: timerViewModel.progress,
                         sessionType: timerViewModel.currentSessionType,
-                        formattedTime: timerViewModel.formattedTime
+                        formattedTime: timerViewModel.formattedTime,
+                        cupStyle: .minimal
                     )
                     
 
