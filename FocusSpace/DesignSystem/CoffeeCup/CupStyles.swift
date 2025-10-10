@@ -29,7 +29,7 @@ struct AnyShape: Shape {
     }
 }
 
-// MARK: - Glass Cup Shape (Trapezoid)
+// MARK: - Glass Cup Shape (Coffee Mug with Handle)
 struct GlassCupShape: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
@@ -37,28 +37,67 @@ struct GlassCupShape: Shape {
         let width = rect.width
         let height = rect.height
         
-        // Top rim
-        let topWidth = width * 0.9
-        let topLeft = (width - topWidth) / 2
-        let topRight = topLeft + topWidth
+        // Main mug body - tall rounded rectangle
+        let mugWidth = width * 0.75
+        let mugHeight = height * 0.85
+        let mugLeft = (width - mugWidth) / 2
+        let mugTop = height * 0.08
+        let cornerRadius: CGFloat = 20
         
-        // Bottom base
-        let bottomWidth = width * 0.6
-        let bottomLeft = (width - bottomWidth) / 2
-        let bottomRight = bottomLeft + bottomWidth
-        
-        // Draw cup outline (trapezoid)
-        path.move(to: CGPoint(x: topLeft, y: 0))
-        path.addLine(to: CGPoint(x: topRight, y: 0))
-        path.addLine(to: CGPoint(x: bottomRight, y: height))
-        path.addLine(to: CGPoint(x: bottomLeft, y: height))
-        path.closeSubpath()
+        // Draw main mug body ONLY
+        let mugRect = CGRect(
+            x: mugLeft,
+            y: mugTop,
+            width: mugWidth,
+            height: mugHeight
+        )
+        path.addRoundedRect(in: mugRect, cornerSize: CGSize(width: cornerRadius, height: cornerRadius))
         
         return path
     }
 }
 
-// MARK: - Mug Cup Shape (Rounded with Handle)
+// MARK: - Glass Cup Handle (Separate for stroke only)
+struct GlassCupHandleShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        
+        let width = rect.width
+        let height = rect.height
+        
+        let mugWidth = width * 0.75
+        let mugHeight = height * 0.85
+        let mugLeft = (width - mugWidth) / 2
+        let mugTop = height * 0.08
+        
+        // Handle - D-shaped on the right
+        let handleTop = mugTop + mugHeight * 0.28
+        let handleBottom = mugTop + mugHeight * 0.68
+        let handleLeft = mugLeft + mugWidth
+        let handleRight = mugLeft + mugWidth + (width * 0.2)
+        let handleMid = (handleTop + handleBottom) / 2
+        
+        // Outer curve
+        path.move(to: CGPoint(x: handleLeft, y: handleTop))
+        path.addCurve(
+            to: CGPoint(x: handleLeft, y: handleBottom),
+            control1: CGPoint(x: handleRight, y: handleTop + (handleMid - handleTop) * 0.4),
+            control2: CGPoint(x: handleRight, y: handleBottom - (handleBottom - handleMid) * 0.4)
+        )
+        
+        // Inner curve (for handle thickness)
+        path.move(to: CGPoint(x: handleLeft, y: handleTop + 10))
+        path.addCurve(
+            to: CGPoint(x: handleLeft, y: handleBottom - 10),
+            control1: CGPoint(x: handleRight - 18, y: handleTop + (handleMid - handleTop) * 0.45 + 10),
+            control2: CGPoint(x: handleRight - 18, y: handleBottom - (handleBottom - handleMid) * 0.45 - 10)
+        )
+        
+        return path
+    }
+}
+
+// MARK: - Mug Cup Shape (Realistic Coffee Mug)
 struct MugCupShape: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
@@ -66,26 +105,86 @@ struct MugCupShape: Shape {
         let width = rect.width
         let height = rect.height
         
-        // Main cup body (rounded rectangle)
-        let cupRect = CGRect(
-            x: width * 0.15,
-            y: height * 0.05,
-            width: width * 0.7,
-            height: height * 0.9
-        )
-        path.addRoundedRect(in: cupRect, cornerSize: CGSize(width: 20, height: 20))
+        // Main mug body with subtle taper
+        let topWidth = width * 0.68
+        let bottomWidth = width * 0.58
+        let mugHeight = height * 0.88
+        let startY = height * 0.08
         
-        // Handle (curved path on the right)
+        // Left side (slightly tapered)
+        let topLeft = (width - topWidth) / 2
+        let bottomLeft = (width - bottomWidth) / 2
+        
+        // Right side
+        let topRight = topLeft + topWidth
+        let bottomRight = bottomLeft + bottomWidth
+        
+        // Draw mug body with rounded corners
+        path.move(to: CGPoint(x: topLeft + 10, y: startY))
+        
+        // Top rim (curved)
+        path.addQuadCurve(
+            to: CGPoint(x: topRight - 10, y: startY),
+            control: CGPoint(x: width * 0.5, y: startY - 5)
+        )
+        
+        // Right top corner
+        path.addQuadCurve(
+            to: CGPoint(x: topRight, y: startY + 10),
+            control: CGPoint(x: topRight, y: startY)
+        )
+        
+        // Right side taper
+        path.addLine(to: CGPoint(x: bottomRight, y: startY + mugHeight - 15))
+        
+        // Bottom right corner
+        path.addQuadCurve(
+            to: CGPoint(x: bottomRight - 15, y: startY + mugHeight),
+            control: CGPoint(x: bottomRight, y: startY + mugHeight)
+        )
+        
+        // Bottom base
+        path.addLine(to: CGPoint(x: bottomLeft + 15, y: startY + mugHeight))
+        
+        // Bottom left corner
+        path.addQuadCurve(
+            to: CGPoint(x: bottomLeft, y: startY + mugHeight - 15),
+            control: CGPoint(x: bottomLeft, y: startY + mugHeight)
+        )
+        
+        // Left side taper
+        path.addLine(to: CGPoint(x: topLeft, y: startY + 10))
+        
+        // Top left corner
+        path.addQuadCurve(
+            to: CGPoint(x: topLeft + 10, y: startY),
+            control: CGPoint(x: topLeft, y: startY)
+        )
+        
+        // Handle (more realistic C-shape)
         let handlePath = Path { p in
-            let handleStart = CGPoint(x: width * 0.85, y: height * 0.3)
-            let handleEnd = CGPoint(x: width * 0.85, y: height * 0.6)
-            let control1 = CGPoint(x: width * 1.05, y: height * 0.35)
-            let control2 = CGPoint(x: width * 1.05, y: height * 0.55)
+            let handleTopY = startY + mugHeight * 0.25
+            let handleBottomY = startY + mugHeight * 0.65
+            let handleStartX = topRight - 5
+            let handleOuterX = width * 0.92
             
-            p.move(to: handleStart)
-            p.addCurve(to: handleEnd, control1: control1, control2: control2)
+            // Handle outer curve
+            p.move(to: CGPoint(x: handleStartX, y: handleTopY))
+            p.addCurve(
+                to: CGPoint(x: handleStartX, y: handleBottomY),
+                control1: CGPoint(x: handleOuterX, y: handleTopY + 15),
+                control2: CGPoint(x: handleOuterX, y: handleBottomY - 15)
+            )
+            
+            // Handle inner curve (thickness)
+            p.move(to: CGPoint(x: handleStartX - 8, y: handleTopY + 5))
+            p.addCurve(
+                to: CGPoint(x: handleStartX - 8, y: handleBottomY - 5),
+                control1: CGPoint(x: handleOuterX - 15, y: handleTopY + 18),
+                control2: CGPoint(x: handleOuterX - 15, y: handleBottomY - 18)
+            )
         }
-        path.addPath(handlePath)
+//        path.addPath(handlePath)
         
         return path
     }

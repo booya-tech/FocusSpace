@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct PresetSelectionView: View {
-    @Binding var selectedPreset: TimerPreset
-    let presets: [TimerPreset]
+    let selectedDuration: Int
     
     var body: some View {
         VStack(spacing: 12) {
@@ -17,21 +16,14 @@ struct PresetSelectionView: View {
                 .font(AppTypography.caption)
                 .foregroundColor(AppColors.secondaryText)
             
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 12) {
-                ForEach(presets, id: \.id) { preset in
-                    PresetButton(
-                        preset: preset,
-                        isSelected: selectedPreset.id == preset.id
-                    )
-                    {
-                        selectedPreset = preset
-                    }
-                }
-            }
+            Text("\(selectedDuration) min")
+                .font(.system(size: 48, weight: .bold, design: .rounded))
+                .foregroundColor(AppColors.primaryText)
+                .monospacedDigit()
         }
     }
 }
 
 #Preview {
-    PresetSelectionView(selectedPreset: .constant(TimerPreset.defaults[0]), presets: TimerPreset.defaults)
+    PresetSelectionView(selectedDuration: 25)
 }

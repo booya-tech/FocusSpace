@@ -10,6 +10,7 @@
 import SwiftUI
 
 // Edit focus/break duration lists with add/remove/reorder
+@available(*, deprecated, message: "This class is no longer supported. Use BreakDurationPickerView instead.")
 struct CustomDurationsView: View {
     let title: String
     @Binding var durations: [Int]

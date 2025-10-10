@@ -15,16 +15,12 @@ struct SettingsView: View {
             Section("Timer Settings") {
                 // Custom Focus Durations
                 NavigationLink {
-                    CustomDurationsView(
-                        title: "Focus Durations",
-                        durations: $preferences.customFocusDurations,
-                        range: 5...120
-                    )
+                    FocusDurationPickerView(selectedDuration: $preferences.selectedFocusDuration)
                 } label: {
                     SettingsRow(
                         icon: "timer",
-                        title: "Focus Durations",
-                        subtitle: "\(preferences.customFocusDurations.count) presets"
+                        title: "Focus Duration",
+                        subtitle: "\(preferences.selectedFocusDuration) min"
                     )
                 }
                 // Custom Break Durations
@@ -36,7 +32,7 @@ struct SettingsView: View {
                     SettingsRow(
                         icon: "pause.circle",
                         title: "Break Durations",
-                        subtitle: "\(preferences.selectedBreakDuration) presets"
+                        subtitle: "\(preferences.selectedBreakDuration) min"
                     )
                 }
                 

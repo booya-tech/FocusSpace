@@ -14,7 +14,7 @@ struct TimerControlsView: View {
         HStack(spacing: 16) {
             if timerViewModel.isIdle {
                 PrimaryButton(title: "Start Focus") {
-                    timerViewModel.start(preset: timerViewModel.selectedPreset)
+                    timerViewModel.start()
                 }
             } else if timerViewModel.isRunning {
                 if !timerViewModel.preferences.isStrictModeEnabled {

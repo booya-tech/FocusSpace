@@ -12,11 +12,11 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 32) {
+            VStack(spacing: 20) {
                 // Session type indicator
-                Text(timerViewModel.currentSessionType.displayName)
+                Text(timerViewModel.currentSessionType.displayName.uppercased())
                     .font(AppTypography.title3)
-                    .foregroundColor(AppColors.secondaryText)
+                    .foregroundColor(AppColors.primaryText)
 
                 // Timer display
                 VStack(spacing: 8) {
@@ -24,7 +24,7 @@ struct ContentView: View {
                         progress: timerViewModel.progress,
                         sessionType: timerViewModel.currentSessionType,
                         formattedTime: timerViewModel.formattedTime,
-                        cupStyle: .minimal
+                        cupStyle: .glass
                     )
                     
 
@@ -39,10 +39,7 @@ struct ContentView: View {
                 // Preset selection (only when idle)
                 if timerViewModel.isIdle {
                     PresetSelectionView(
-                        selectedPreset: $timerViewModel.selectedPreset,
-                        presets: timerViewModel.preferences.customFocusDurations.map { 
-                            TimerPreset(durationTitle: "\($0)", minutes: $0)
-                        }
+                        selectedDuration: timerViewModel.preferences.selectedFocusDuration
                     )
                 }
 
