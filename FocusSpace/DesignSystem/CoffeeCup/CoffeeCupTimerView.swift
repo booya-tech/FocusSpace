@@ -23,17 +23,26 @@ struct CoffeeCupTimerView: View {
                     // Filling liquid with wave animation
                     if cupStyle == .glass {
                         // Cup
-                        cupShape
-                            .fill(AppColors.primary.opacity(0.2))
-                            .frame(width: 200, height: 240)
-                            .mask(
-                                ZStack(alignment: .bottom) {
-                                    Rectangle()
-                                        .frame(height: 240 * progress)
-                                        .frame(maxHeight: .infinity, alignment: .bottom)
-                                }
-                            )
-                            .animation(.easeInOut(duration: 1.0), value: progress)
+                        // cupShape
+                        //     .fill(AppColors.primary.opacity(0.2))
+                        //     .frame(width: 200, height: 240)
+                        //     .mask(
+                        //         ZStack(alignment: .bottom) {
+                        //             Rectangle()
+                        //                 .frame(height: 240 * progress)
+                        //                 .frame(maxHeight: .infinity, alignment: .bottom)
+                        //         }
+                        //     )
+                        //     .animation(.easeInOut(duration: 1.0), value: progress)
+                                                // Wave-filled cup
+                        ZStack(alignment: .bottom) {
+                            CoffeeWaveView(progress: progress, cupStyle: cupStyle)
+                                .frame(width: 200, height: 240)
+                        }
+                        .mask(
+                            cupShape
+                                .frame(width: 200, height: 240)
+                        )
                         
                         // Cup Handle
                         GlassCupHandleShape()
@@ -62,9 +71,9 @@ struct CoffeeCupTimerView: View {
 
                 // Code icon in center of cup
                 if cupStyle == .glass {
-                    Image(systemName: "chevron.left.forwardslash.chevron.right")
+                    Image(systemName: "f.cursive")
                         .font(.system(size: 40, weight: .light))
-                        .foregroundColor(AppColors.primary)
+                        .foregroundColor(AppColors.primaryRevert)
                         .offset(y: 0)
                 }
             }
@@ -109,7 +118,7 @@ struct CoffeeCupTimerView: View {
                     .font(.caption)
                     .foregroundColor(.gray)
                 CoffeeCupTimerView(
-                    progress: 0.7,
+                    progress: 0.8,
                     sessionType: .focus,
                     formattedTime: "25:00",
                     cupStyle: .glass

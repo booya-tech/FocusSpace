@@ -57,3 +57,59 @@ struct FoamLayer: View {
         }
     }
 }
+
+// MARK: - Coffee Wave Animation
+struct CoffeeWaveView: View {
+    let progress: Double
+    let cupStyle: CupStyle
+    @State private var waveOffset: CGFloat = 0
+    
+    var body: some View {
+        GeometryReader { geometry in
+            WaveShape(offset: waveOffset, progress: progress)
+                .fill(AppColors.primary)
+                .frame(height: geometry.size.height * progress)
+                .frame(maxHeight: .infinity, alignment: .bottom)
+                .onAppear {
+                    withAnimation(
+                        .linear(duration: 3.0)
+                        .repeatForever(autoreverses: false)
+                    ) {
+                        waveOffset = geometry.size.width
+                    }
+                }
+        }
+    }
+}
+
+// MARK: - Wave Shape
+struct WaveShape: Shape {
+    var offset: CGFloat
+    let progress: Double
+    
+    var animatableData: CGFloat {
+        get { offset }
+        set { offset = newValue }
+    }
+    
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let waveHeight: CGFloat = 8
+        let yOffset = rect.height * (1 - progress)
+        
+        path.move(to: CGPoint(x: 0, y: yOffset))
+        
+        for x in stride(from: 0, through: rect.width, by: 1) {
+            let relativeX = x / rect.width
+            let sine = sin((relativeX + offset / rect.width) * .pi * 4)
+            let y = yOffset + sine * waveHeight
+            path.addLine(to: CGPoint(x: x, y: y))
+        }
+        
+        path.addLine(to: CGPoint(x: rect.width, y: rect.height))
+        path.addLine(to: CGPoint(x: 0, y: rect.height))
+        path.closeSubpath()
+        
+        return path
+    }
+}

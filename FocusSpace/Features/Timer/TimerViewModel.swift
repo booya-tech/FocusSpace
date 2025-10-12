@@ -117,7 +117,7 @@ final class TimerViewModel: ObservableObject {
         stop()  // Clear any existing timer
         currentSessionType = sessionType
 
-        let durationMinutes = sessionType == .focus ? preferences.selectedFocusDuration : preferences.selectedBreakDuration
+       let durationMinutes = sessionType == .focus ? preferences.selectedFocusDuration : preferences.selectedBreakDuration
         totalSeconds = durationMinutes * 60
         remainingSeconds = totalSeconds
         sessionEndTime = Date().addingTimeInterval(TimeInterval(totalSeconds))
@@ -167,7 +167,6 @@ final class TimerViewModel: ObservableObject {
 
         currentState = .paused
         stopTimer()
-
         triggerHaptic(.light)
 
         // Update Live Activity to show paused state
@@ -187,6 +186,7 @@ final class TimerViewModel: ObservableObject {
     func resume() {
         guard currentState == .paused else { return }
 
+        sessionEndTime = Date().addingTimeInterval(TimeInterval(remainingSeconds))
         currentState = .running
         startTimer()
 
