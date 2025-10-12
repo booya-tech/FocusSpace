@@ -44,6 +44,8 @@ struct ContentView: View {
                             )
                         }
                         
+                        Spacer()
+                        
                         // Timer controls
                         TimerControlsView(timerViewModel: timerViewModel)
                         

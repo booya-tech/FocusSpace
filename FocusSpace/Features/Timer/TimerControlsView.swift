@@ -13,7 +13,7 @@ struct TimerControlsView: View {
     var body: some View {
         HStack(spacing: 16) {
             if timerViewModel.isIdle {
-                PrimaryButton(title: "Start Focus") {
+                CircleStartButton {
                     timerViewModel.start()
                 }
             } else if timerViewModel.isRunning {

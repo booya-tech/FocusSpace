@@ -17,7 +17,7 @@ struct PresetSelectionView: View {
                 .foregroundColor(AppColors.secondaryText)
             
             Text("\(selectedDuration) min")
-                .font(.system(size: 48, weight: .bold, design: .rounded))
+                .font(.system(size: 24, weight: .bold, design: .rounded))
                 .foregroundColor(AppColors.primaryText)
                 .monospacedDigit()
         }
