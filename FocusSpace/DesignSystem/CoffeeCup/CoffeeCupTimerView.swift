@@ -23,18 +23,6 @@ struct CoffeeCupTimerView: View {
                     // Filling liquid with wave animation
                     if cupStyle == .glass {
                         // Cup
-                        // cupShape
-                        //     .fill(AppColors.primary.opacity(0.2))
-                        //     .frame(width: 200, height: 240)
-                        //     .mask(
-                        //         ZStack(alignment: .bottom) {
-                        //             Rectangle()
-                        //                 .frame(height: 240 * progress)
-                        //                 .frame(maxHeight: .infinity, alignment: .bottom)
-                        //         }
-                        //     )
-                        //     .animation(.easeInOut(duration: 1.0), value: progress)
-                                                // Wave-filled cup
                         ZStack(alignment: .bottom) {
                             CoffeeWaveView(progress: progress, cupStyle: cupStyle)
                                 .frame(width: 200, height: 240)
@@ -71,7 +59,7 @@ struct CoffeeCupTimerView: View {
 
                 // Code icon in center of cup
                 if cupStyle == .glass {
-                    Image(systemName: "f.cursive")
+                    Image(systemName: "apple.meditate")
                         .font(.system(size: 40, weight: .light))
                         .foregroundColor(AppColors.primaryRevert)
                         .offset(y: 0)
@@ -80,7 +68,7 @@ struct CoffeeCupTimerView: View {
 
             // Time Display
             Text(formattedTime)
-                .font(.system(size: 48, weight: .bold, design: .monospaced))
+                .font(.system(size: 32, weight: .bold, design: .monospaced))
                 .foregroundColor(AppColors.primaryText)
         }
         .padding()
@@ -110,7 +98,7 @@ struct CoffeeCupTimerView: View {
 
 // MARK: - Preview
 #Preview("All Styles") {
-    ScrollView {
+    ScrollView(showsIndicators: false) {
         VStack(spacing: 40) {
             // Coder Glass Style
             VStack {

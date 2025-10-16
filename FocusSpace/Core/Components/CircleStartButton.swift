@@ -86,15 +86,16 @@ struct CircleStartButton: View {
                 timer.invalidate()
                 
                 // Start action
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    action()
-                    
-                    // Reset state
-                    withAnimation {
-                        isCountingDown = false
-                        countdown = 3
-                        progress = 1.0
-                    }
+                // DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+
+                // }
+                action()
+
+                // Reset state
+                withAnimation {
+                    isCountingDown = false
+                    countdown = 3
+                    progress = 1.0
                 }
             }
         }

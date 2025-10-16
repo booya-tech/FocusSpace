@@ -250,9 +250,11 @@ final class TimerViewModel: ObservableObject {
     }
 
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { Timer in
+        timerTick()
+
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             Task { @MainActor in
-                self.timerTick()
+                self?.timerTick()
             }
         }
     }

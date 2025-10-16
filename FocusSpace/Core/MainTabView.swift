@@ -37,8 +37,6 @@ struct MainTabView: View {
             NavigationStack {
                 ContentView()
                     .environmentObject(timerViewModel)
-                    .navigationTitle("Focus Timer")
-                    .navigationBarTitleDisplayMode(.inline)
             }
             .tabItem {
                 Image(systemName: "timer")
@@ -62,7 +60,7 @@ struct MainTabView: View {
                             .foregroundColor(AppColors.secondaryText)
                     }
 
-                    Spacer()
+//                    Spacer()
 
                     PrimaryButton(title: "Sign Out") {
                         Task {
@@ -70,6 +68,7 @@ struct MainTabView: View {
                         }
                     }
                     .padding()
+                    Spacer()
                 }
                 .navigationTitle("Profile")
                 .navigationBarTitleDisplayMode(.inline)
@@ -84,7 +83,7 @@ struct MainTabView: View {
                 LoadingView()
             }
         }
-        .accentColor(AppColors.accent)
+        .accentColor(AppColors.primary)
         .task {
             // Sync on app launch
             await timerViewModel.syncOnForeground()

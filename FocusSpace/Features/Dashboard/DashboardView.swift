@@ -12,7 +12,7 @@ struct DashboardView: View {
     @EnvironmentObject var timerViewModel: TimerViewModel
 
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(spacing: 24) {
                 // Daily Goal Section
                 dailyGoalSection
@@ -33,7 +33,7 @@ struct DashboardView: View {
         .onAppear() {
             updateStats()
         }
-        .onChange(of: timerViewModel.completedSessions) { _ in
+        .onChange(of: timerViewModel.completedSessions) {
             updateStats()
         }
     }
