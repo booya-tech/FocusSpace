@@ -10,6 +10,7 @@
 import Foundation
 import Supabase
 import Auth
+import AuthenticationServices
 
 @MainActor
 final class AuthService: ObservableObject {
@@ -17,6 +18,7 @@ final class AuthService: ObservableObject {
     @Published var isLoading = false
 
     private let supabase = SupabaseManager.shared.client
+    private var appleSignInCoordinator: AppleSignInCoordinator?
 
     init() {
         // Check for existing session on app launch
@@ -57,6 +59,23 @@ final class AuthService: ObservableObject {
         let response = try await supabase.auth.signIn(
             email: email,
             password: password
+        )
+
+        currentUser = response.user
+    }
+
+    // Sign in with Apple
+    func signInWithApple(_ idToken: String) async throws {
+        isLoading = true
+        defer { isLoading = false }
+
+
+        // Send token to Supabase
+        let response = try await supabase.auth.signInWithIdToken(
+            credentials: .init(
+                provider: .apple,
+                idToken: idToken
+            )
         )
 
         currentUser = response.user
