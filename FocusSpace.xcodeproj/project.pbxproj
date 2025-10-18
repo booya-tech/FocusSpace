@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C09EFD862EA3C67F0026F0CA /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */; };
+		C09EFD872EA3C67F0026F0CA /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */; };
+		C09EFD882EA3C67F0026F0CA /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */; };
+		C09EFD892EA3C67F0026F0CA /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */; };
 		C0BDD4FA2E76CFA500E69A6B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BDD4F92E76CFA500E69A6B /* WidgetKit.framework */; };
 		C0BDD4FC2E76CFA500E69A6B /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BDD4FB2E76CFA500E69A6B /* SwiftUI.framework */; };
 		C0BDD50D2E76CFA700E69A6B /* FocusSpaceWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C0BDD4F72E76CFA500E69A6B /* FocusSpaceWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -53,6 +57,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		C0BDD4F72E76CFA500E69A6B /* FocusSpaceWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FocusSpaceWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0BDD4F92E76CFA500E69A6B /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		C0BDD4FB2E76CFA500E69A6B /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -163,6 +168,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C09EFD842EA3C6430026F0CA /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		C0BDD4F82E76CFA500E69A6B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,6 +188,7 @@
 		C0CAEB3D2E58B8020035D5D1 = {
 			isa = PBXGroup;
 			children = (
+				C09EFD842EA3C6430026F0CA /* Config */,
 				C0D802E62E7856C400853307 /* FocusSpaceWidgetsExtension.entitlements */,
 				C0CAEB482E58B8020035D5D1 /* FocusSpace */,
 				C0CAEB562E58B8040035D5D1 /* FocusSpaceTests */,
@@ -349,6 +363,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C09EFD892EA3C67F0026F0CA /* Secrets.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +371,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C09EFD862EA3C67F0026F0CA /* Secrets.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,6 +379,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C09EFD872EA3C67F0026F0CA /* Secrets.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +387,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C09EFD882EA3C67F0026F0CA /* Secrets.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,6 +501,7 @@
 		};
 		C0CAEB652E58B8040035D5D1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -547,6 +566,7 @@
 		};
 		C0CAEB662E58B8040035D5D1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -630,6 +650,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.boopannachai.FocusSpace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPABASE_ANON_KEY = "$(SUPABASE_ANON_KEY)";
+				SUPABASE_URL = "$(SUPABASE_URL)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -668,6 +690,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.boopannachai.FocusSpace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPABASE_ANON_KEY = "$(SUPABASE_ANON_KEY)";
+				SUPABASE_URL = "$(SUPABASE_URL)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

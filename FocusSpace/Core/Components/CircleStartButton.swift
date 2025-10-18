@@ -110,7 +110,7 @@ struct CircleStartButton: View {
             .foregroundColor(.gray)
         
         CircleStartButton {
-            print("Timer started!")
+            Logger.log("Timer started!")
         }
     }
     .padding()

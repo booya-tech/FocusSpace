@@ -50,7 +50,7 @@ final class AppViewModel: NSObject,ObservableObject {
         do {
             try await authService.signOut()
         } catch {
-            print("Sign out error: \(error.localizedDescription)")
+            Logger.log("Sign out error: \(error.localizedDescription)")
         }
     }
 

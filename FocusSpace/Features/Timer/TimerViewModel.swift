@@ -82,7 +82,7 @@ final class TimerViewModel: ObservableObject {
                 self.completedSessions = sessions
             }
         } catch {
-            print("Failed to load sessions: \(error)")
+            Logger.log("Failed to load sessions: \(error)")
         }
     }
 
@@ -92,7 +92,7 @@ final class TimerViewModel: ObservableObject {
             try await sessionSync.saveSession(session)
             await loadSessions()
         } catch {
-            print("Failed to save session: \(error)")
+            Logger.log("Failed to save session: \(error)")
         }
     }
 
@@ -102,7 +102,7 @@ final class TimerViewModel: ObservableObject {
             try await sessionSync.syncNow()
             await loadSessions()
         } catch {
-            print("Sync failed: \(error)")
+            Logger.log("Sync failed: \(error)")
         }
     }
 
@@ -154,11 +154,11 @@ final class TimerViewModel: ObservableObject {
         Task {
             await notificationManager.debugPendingNotifications()
         }
-
-        print("🔍 Timer Debug:")
-        print("   Session Type: \(sessionType.displayName)")
-        print("   Total Seconds: \(totalSeconds)")
-        print("   Preset Name: \(durationMinutes) min")
+        
+        Logger.log("🔍 Timer Debug:")
+        Logger.log("Session Type: \(sessionType.displayName)")
+        Logger.log("Total Seconds: \(totalSeconds)")
+        Logger.log("Preset Name: \(durationMinutes) min")
     }
 
     // Pause the current timer

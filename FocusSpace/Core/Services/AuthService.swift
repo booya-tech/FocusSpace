@@ -33,7 +33,7 @@ final class AuthService: ObservableObject {
             let session = try await supabase.auth.session
             currentUser = session.user
         } catch {
-            print("No exisiting session found")
+            Logger.log("No exisiting session found")
             currentUser = nil
         }
     }
