@@ -8,6 +8,7 @@
 //
 
 import Foundation
+import AuthenticationServices
 
 // ViewModel handling authentication UI logic and validation
 @MainActor
@@ -92,6 +93,56 @@ final class AuthViewModel: ObservableObject {
                     email: email,
                     password: password
                 )
+            }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+    
+    // Handle Sign in with Apple result
+    // func signInWithApple() async {
+    //     isLoading = true
+    //     errorMessage = ""
+    //     defer { isLoading = false }
+
+    //     do {
+    //         try await authService.signInWithApple()
+    //     } catch {
+    //         if let authError = error as? ASAuthorizationError,
+    //             authError.code == .canceled
+    //         {
+    //             errorMessage = "Sign in cancelled"
+    //         } else {
+    //             errorMessage = error.localizedDescription
+    //         }
+    //     }
+    // }
+    func handleAppleSignIn(_ result: Result<ASAuthorization, Error>) async {
+        isLoading = true
+        errorMessage = ""
+        defer { isLoading = false }
+        
+        do {
+            switch result {
+            case .success(let authorization):
+                // Extract the credential from the button's result
+                guard
+                    let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
+                    let identityToken = credential.identityToken,
+                    let tokenString = String(data: identityToken, encoding: .utf8)
+                else {
+                    errorMessage = "Failed to get Apple credentials"
+                    return
+                }
+                try await authService.signInWithApple(tokenString)
+            case .failure(let error):
+                // Check if user cancelled
+                if let authError = error as? ASAuthorizationError,
+                   authError.code == .canceled {
+                    errorMessage = "Sign in cancelled"
+                } else {
+                    errorMessage = error.localizedDescription
+                }
             }
         } catch {
             errorMessage = error.localizedDescription

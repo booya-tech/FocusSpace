@@ -31,7 +31,6 @@ final class TimerViewModel: ObservableObject {
     @Published var totalSeconds: Int = 0
     @Published var currentState: TimerState = .idle
     @Published var currentSessionType: SessionType = .focus
-    @Published var selectedPreset: TimerPreset = TimerPreset.defaults[0]
     @Published var completedSessions: [Session] = []
     @Published private(set) var sessionEndTime: Date?
     // Notification Manager
@@ -83,7 +82,7 @@ final class TimerViewModel: ObservableObject {
                 self.completedSessions = sessions
             }
         } catch {
-            print("Failed to load sessions: \(error)")
+            Logger.log("Failed to load sessions: \(error)")
         }
     }
 
@@ -93,7 +92,7 @@ final class TimerViewModel: ObservableObject {
             try await sessionSync.saveSession(session)
             await loadSessions()
         } catch {
-            print("Failed to save session: \(error)")
+            Logger.log("Failed to save session: \(error)")
         }
     }
 
@@ -103,7 +102,7 @@ final class TimerViewModel: ObservableObject {
             try await sessionSync.syncNow()
             await loadSessions()
         } catch {
-            print("Sync failed: \(error)")
+            Logger.log("Sync failed: \(error)")
         }
     }
 
@@ -114,12 +113,12 @@ final class TimerViewModel: ObservableObject {
 
     // MARK: - Timer Actions
     // Start a new timer session
-    func start(preset: TimerPreset, sessionType: SessionType = .focus) {
+    func start(sessionType: SessionType = .focus) {
         stop()  // Clear any existing timer
-
-        selectedPreset = preset
         currentSessionType = sessionType
-        totalSeconds = preset.minutes * 60
+
+       let durationMinutes = sessionType == .focus ? preferences.selectedFocusDuration : preferences.selectedBreakDuration
+        totalSeconds = durationMinutes * 60
         remainingSeconds = totalSeconds
         sessionEndTime = Date().addingTimeInterval(TimeInterval(totalSeconds))
         sessionStartTime = Date()
@@ -132,7 +131,7 @@ final class TimerViewModel: ObservableObject {
         // Start Live Activity
         Task {
             await activityManager.startNewLiveActivity(
-                presetName: preset.durationTitle,
+                presetName: "\(durationMinutes)",
                 sessionType: sessionType,
                 totalSeconds: totalSeconds,
                 remainingSeconds: remainingSeconds,
@@ -148,18 +147,18 @@ final class TimerViewModel: ObservableObject {
             await notificationManager.scheduleTimerCompletion(
                 for: sessionType,
                 in: TimeInterval(totalSeconds),
-                presetName: preset.durationTitle
+                presetName: "\(durationMinutes)"
             )
         }
 
         Task {
             await notificationManager.debugPendingNotifications()
         }
-
-        print("🔍 Timer Debug:")
-        print("   Session Type: \(sessionType.displayName)")
-        print("   Total Seconds: \(totalSeconds)")
-        print("   Preset Name: \(preset.durationTitle)")
+        
+        Logger.log("🔍 Timer Debug:")
+        Logger.log("Session Type: \(sessionType.displayName)")
+        Logger.log("Total Seconds: \(totalSeconds)")
+        Logger.log("Preset Name: \(durationMinutes) min")
     }
 
     // Pause the current timer
@@ -168,7 +167,6 @@ final class TimerViewModel: ObservableObject {
 
         currentState = .paused
         stopTimer()
-
         triggerHaptic(.light)
 
         // Update Live Activity to show paused state
@@ -188,6 +186,7 @@ final class TimerViewModel: ObservableObject {
     func resume() {
         guard currentState == .paused else { return }
 
+        sessionEndTime = Date().addingTimeInterval(TimeInterval(remainingSeconds))
         currentState = .running
         startTimer()
 
@@ -204,7 +203,13 @@ final class TimerViewModel: ObservableObject {
         }
 
         Task {
-            await notificationManager.scheduleTimerCompletion(for: currentSessionType, in: TimeInterval(remainingSeconds), presetName: selectedPreset.durationTitle)
+            let durationMinutes = currentSessionType == .focus ? preferences.selectedFocusDuration : preferences.selectedBreakDuration
+
+            await notificationManager.scheduleTimerCompletion(
+                for: currentSessionType,
+                in: TimeInterval(remainingSeconds),
+                presetName: "\(durationMinutes)"
+            )
         }
     }
 
@@ -235,9 +240,7 @@ final class TimerViewModel: ObservableObject {
         completeCurrentSession()
 
         // Start short break
-        let breakDuration = SessionType.shortBreak.defaultMinutes
-        let breakPreset = TimerPreset(durationTitle: "\(breakDuration)", minutes: breakDuration)
-        start(preset: breakPreset, sessionType: .shortBreak)
+        start(sessionType: .longBreak)
     }
 
     // Skip the current break
@@ -247,9 +250,11 @@ final class TimerViewModel: ObservableObject {
     }
 
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { Timer in
+        timerTick()
+
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             Task { @MainActor in
-                self.timerTick()
+                self?.timerTick()
             }
         }
     }
@@ -264,8 +269,8 @@ final class TimerViewModel: ObservableObject {
             timerCompleted()
             return
         }
-
-            // Update Live Activity progress every 5 seconds (not every second to avoid throttling)
+        
+        // Update Live Activity progress every 5 seconds (not every second to avoid throttling)
         if remaining % 5 == 0 {
             Task {
                 await activityManager.updateLiveActivity(
@@ -323,11 +328,7 @@ final class TimerViewModel: ObservableObject {
         // Auto-start break after focus session
         if currentSessionType == .focus {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                let breakDuration = SessionType.shortBreak.defaultMinutes
-                let breakPreset = TimerPreset(
-                    durationTitle: "\(breakDuration)", minutes: breakDuration)
-
-                self.start(preset: breakPreset, sessionType: .shortBreak)
+                self.start(sessionType: .longBreak)
             }
         }
         // After break, return to idle state

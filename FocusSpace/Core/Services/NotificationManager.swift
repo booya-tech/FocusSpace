@@ -35,12 +35,12 @@ final class NotificationManager: ObservableObject {
             await checkAuthorizationStatus()
 
             if granted {
-                print("✅ Notification permission granted")
+                Logger.log("✅ Notification permission granted")
             } else {
-                print("❌ Notification permission denied")
+                Logger.log("❌ Notification permission denied")
             }
         } catch {
-            print("❌ Failed to request notification permission: \(error)")
+            Logger.log("❌ Failed to request notification permission: \(error)")
         }
     }
 
@@ -59,7 +59,7 @@ final class NotificationManager: ObservableObject {
         presetName: String
     ) async {
         guard isAuthorized else {
-            print("⚠️ Notifications not authorized")
+            Logger.log("⚠️ Notifications not authorized")
             return
         }
         
@@ -86,34 +86,34 @@ final class NotificationManager: ObservableObject {
         
         do {
             try await notificationCenter.add(request)
-            print("📱 Scheduled notification for \(sessionType.displayName) in \(Int(seconds))s")
+            Logger.log("📱 Scheduled notification for \(sessionType.displayName) in \(Int(seconds))s")
         } catch {
-            print("❌ Failed to schedule notification: \(error)")
+            Logger.log("❌ Failed to schedule notification: \(error)")
         }
     }
 
     /// Cancel all pending timer notifications
     func cancelAllTimerNotifications() {
         notificationCenter.removeAllPendingNotificationRequests()
-        print("🗑️ Cancelled all pending notifications")
+        Logger.log("🗑️ Cancelled all pending notifications")
     }
 
     /// Cancel specific timer notification
     func cancelTimerNotification(for sessionType: SessionType) {
         let identifiers = ["timer_\(sessionType.rawValue)"]
         notificationCenter.removePendingNotificationRequests(withIdentifiers: identifiers)
-        print("🗑️ Cancelled \(sessionType.displayName) notification")
+        Logger.log("🗑️ Cancelled \(sessionType.displayName) notification")
     }
 
     //MARK: - Debugging Methods
     // Add this method to NotificationManager class
     func debugPendingNotifications() async {
         let requests = await notificationCenter.pendingNotificationRequests()
-        print("🔍 Pending Notifications: \(requests.count)")
+        Logger.log("🔍 Pending Notifications: \(requests.count)")
         for request in requests {
-            print("   ID: \(request.identifier)")
+            Logger.log("ID: \(request.identifier)")
             if let trigger = request.trigger as? UNTimeIntervalNotificationTrigger {
-                print("   Time Interval: \(trigger.timeInterval)s")
+                Logger.log("Time Interval: \(trigger.timeInterval)s")
             }
         }
     }
@@ -121,12 +121,12 @@ final class NotificationManager: ObservableObject {
     // Add this method to NotificationManager class
     func debugAuthorizationStatus() async {
         let settings = await notificationCenter.notificationSettings()
-        print("🔍 Notification Debug:")
-        print("   Authorization Status: \(settings.authorizationStatus.rawValue)")
-        print("   Alert Setting: \(settings.alertSetting.rawValue)")
-        print("   Sound Setting: \(settings.soundSetting.rawValue)")
-        print("   Badge Setting: \(settings.badgeSetting.rawValue)")
-        print("   isAuthorized: \(isAuthorized)")
+        Logger.log("🔍 Notification Debug:")
+        Logger.log("Authorization Status: \(settings.authorizationStatus.rawValue)")
+        Logger.log("Alert Setting: \(settings.alertSetting.rawValue)")
+        Logger.log("Sound Setting: \(settings.soundSetting.rawValue)")
+        Logger.log("Badge Setting: \(settings.badgeSetting.rawValue)")
+        Logger.log("isAuthorized: \(isAuthorized)")
     }
 }
 
@@ -135,14 +135,14 @@ extension SessionType {
         switch self {
             case .focus: return "Focus Session Completed!"
             case .shortBreak: return "Break Time Over!"
-            case .longBreak: return "Long Break Finished!"
+            case .longBreak: return "Break Time Over!"
         }
     }
 
     func notificationBody(presetName: String) -> String {
         switch self {
         case .focus:
-            return "Great work! Your \(presetName)-minute focus session is done. Time for a break!"
+            return "Great work! Your \(presetName)-minute focus session is done. Open the app to start your break."
         case .shortBreak:
             return "Ready to get back to work? Your break is over."
         case .longBreak:

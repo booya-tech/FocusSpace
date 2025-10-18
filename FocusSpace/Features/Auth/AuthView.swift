@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 
 struct AuthView: View {
     @StateObject private var viewModel: AuthViewModel
@@ -31,7 +32,8 @@ struct AuthView: View {
             VStack(spacing: 16) {
                 // Email field
                 TextField("Email", text: $viewModel.email)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .controlSize(.large)
+                    .textFieldStyle(.roundedBorder)
                     .textInputAutocapitalization(.never)
                     .keyboardType(.emailAddress)
                 
@@ -54,6 +56,48 @@ struct AuthView: View {
                 }
             }
             
+            VStack(spacing: 12) {
+                HStack {
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundColor(AppColors.secondaryText.opacity(0.3))
+                    Text("OR")
+                        .font(AppTypography.caption)
+                        .foregroundColor(AppColors.secondaryText)
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundColor(AppColors.secondaryText.opacity(0.3))
+                }
+
+                // Button(action: {
+                //     Task {
+                //         await viewModel.signInWithApple()
+                //     }
+                // }) {
+                //     HStack {
+                //         Image(systemName: "apple.logo")
+                //         Text("Sign in with Apple")
+                //     }
+                //     .frame(maxWidth: .infinity)
+                //     .frame(height: 50)
+                //     .background(Color.black)
+                //     .foregroundColor(Color.white)
+                //     .cornerRadius(8)
+                // }
+                // .disabled(viewModel.isLoading)
+                SignInWithAppleButton(
+                    .signIn,
+                    onRequest: { request in
+                        request.requestedScopes = [.fullName, .email]
+                    }, onCompletion: { result in
+                        Task {
+                            await viewModel.handleAppleSignIn(result)
+                        }
+                    }
+                )
+                .frame(height: 50)
+                .cornerRadius(8)
+            }
             
             // Action buttons
             VStack(spacing: 16) {

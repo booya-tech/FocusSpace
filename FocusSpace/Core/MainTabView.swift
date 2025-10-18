@@ -16,6 +16,7 @@ struct MainTabView: View {
     // Sync Service
     @StateObject private var localRepository = LocalSessionRepository()
     @StateObject private var syncService: SessionSyncService
+    @State private var isSyncing = true
 
     // Initialization
     init() {
@@ -36,48 +37,10 @@ struct MainTabView: View {
             NavigationStack {
                 ContentView()
                     .environmentObject(timerViewModel)
-                    .navigationTitle("Focus Timer")
-                    .navigationBarTitleDisplayMode(.inline)
-                //                    .toolbar {
-                //                        ToolbarItem(placement: .navigationBarTrailing) {
-                //                            Button("Sign Out") {
-                //                                Task {
-                //                                    try? await authService.signOut()
-                //                                }
-                //                            }
-                //                            .font(AppTypography.caption)
-                //                            .foregroundColor(AppColors.secondaryText)
-                //                        }
-                //                    }
             }
             .tabItem {
                 Image(systemName: "timer")
                 Text("Timer")
-            }
-            // Profile Tab (placeholder)
-            NavigationStack {
-                VStack {
-                    if let user = authService.currentUser {
-                        Text("Email: \(user.email ?? "Unknown")")
-                            .font(AppTypography.body)
-                            .foregroundColor(AppColors.secondaryText)
-                    }
-
-                    Spacer()
-
-                    PrimaryButton(title: "Sign Out") {
-                        Task {
-                            try? await authService.signOut()
-                        }
-                    }
-                    .padding()
-                }
-                .navigationTitle("Profile")
-                .navigationBarTitleDisplayMode(.inline)
-            }
-            .tabItem {
-                Image(systemName: "person.circle")
-                Text("Profile")
             }
             // Dashboard Tab
             NavigationStack {
@@ -88,11 +51,43 @@ struct MainTabView: View {
                 Image(systemName: "chart.bar.fill")
                 Text("Dashboard")
             }
+            // Profile Tab (placeholder)
+            NavigationStack {
+                VStack {
+                    if let user = authService.currentUser {
+                        Text("Email: \(user.email ?? "Unknown")")
+                            .font(AppTypography.body)
+                            .foregroundColor(AppColors.secondaryText)
+                    }
+
+//                    Spacer()
+
+                    PrimaryButton(title: "Sign Out") {
+                        Task {
+                            try? await authService.signOut()
+                        }
+                    }
+                    .padding()
+                    Spacer()
+                }
+                .navigationTitle("Profile")
+                .navigationBarTitleDisplayMode(.inline)
+            }
+            .tabItem {
+                Image(systemName: "person.circle")
+                Text("Profile")
+            }
         }
-        .accentColor(AppColors.accent)
+        .overlay {
+            if isSyncing {
+                LoadingView()
+            }
+        }
+        .accentColor(AppColors.primary)
         .task {
             // Sync on app launch
             await timerViewModel.syncOnForeground()
+            isSyncing = false
         }
     }
 }

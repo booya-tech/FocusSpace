@@ -38,7 +38,7 @@ final class SessionSyncService: ObservableObject {
         do {
             try await remoteRepository.save(session)
         } catch {
-            print("Remote save failed, will retry on next sync: \(error)")
+            Logger.log("Remote save failed, will retry on next sync: \(error)")
         }
     }
 
@@ -50,7 +50,7 @@ final class SessionSyncService: ObservableObject {
         do {
             try await remoteRepository.delete(id: id)
         } catch {
-            print("Remote delete failed: \(error)")
+            Logger.log("Remote delete failed: \(error)")
         }
     }
 
@@ -69,9 +69,9 @@ final class SessionSyncService: ObservableObject {
             localRepository.replaceAll(with: remoteSessions)
 
             lastSyncDate = Date()
-            print("Sync completed: \(remoteSessions.count) sessions")
+            Logger.log("Sync completed: \(remoteSessions.count) sessions")
         } catch {
-            print("Sync failed: \(error)")
+            Logger.log("Sync failed: \(error)")
             throw error
         }
     }
@@ -81,7 +81,7 @@ final class SessionSyncService: ObservableObject {
         do {
             try await syncNow()
         } catch {
-            print("Background sync failed: \(error)")
+            Logger.log("Background sync failed: \(error)")
         }
     }
 

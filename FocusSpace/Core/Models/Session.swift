@@ -16,9 +16,9 @@ enum SessionType: String, CaseIterable, Codable {
 
     var displayName: String {
         switch self {
-            case .focus: return "Focus"
-            case .shortBreak: return "Short Break"
-            case .longBreak: return "Long Break"
+            case .focus: return "Time to Focus"
+            case .shortBreak: return "Time to Focus"
+            case .longBreak: return "Time to Focus"
         }
     }
 
@@ -33,9 +33,9 @@ enum SessionType: String, CaseIterable, Codable {
     var color: Color {
         switch self {
         case .focus:
-            return .green
+            return .white
         case .shortBreak, .longBreak:
-            return .orange
+            return .blue
         }
     }
 }

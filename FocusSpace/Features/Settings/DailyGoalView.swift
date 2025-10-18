@@ -89,7 +89,7 @@ struct DailyGoalView: View {
                             .font(AppTypography.body)
                             .foregroundColor(AppColors.accent)
                     }
-                    .onChange(of: goalMinutes) { _ in
+                    .onChange(of: goalMinutes) {
                         HapticManager.shared.light()
                     }
                 }

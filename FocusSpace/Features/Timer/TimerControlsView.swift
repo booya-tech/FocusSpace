@@ -13,8 +13,8 @@ struct TimerControlsView: View {
     var body: some View {
         HStack(spacing: 16) {
             if timerViewModel.isIdle {
-                PrimaryButton(title: "Start Focus") {
-                    timerViewModel.start(preset: timerViewModel.selectedPreset)
+                CircleStartButton {
+                    timerViewModel.start()
                 }
             } else if timerViewModel.isRunning {
                 if !timerViewModel.preferences.isStrictModeEnabled {
@@ -31,8 +31,7 @@ struct TimerControlsView: View {
                             .foregroundColor(AppColors.secondaryText)
                     }
                 }
-
-                if timerViewModel.currentSessionType == .focus {
+                if timerViewModel.currentSessionType == .focus{
                     if timerViewModel.preferences.isStrictModeEnabled {
                         PrimaryButton(title: "Stop Session", isDestructive: true) {
                             timerViewModel.stop()
@@ -42,12 +41,16 @@ struct TimerControlsView: View {
                             timerViewModel.skipToBreak()
                         }
                     }
+                } else if timerViewModel.currentSessionType == .longBreak {
+                    PrimaryButton(title: "Stop Break", isDestructive: true) {
+                        timerViewModel.stop()
+                    }
                 }
             } else if timerViewModel.isPaused {
                 PrimaryButton(title: "Resume") {
                     timerViewModel.resume()
                 }
-
+                
                 PrimaryButton(title: "Stop", isDestructive: true) {
                     timerViewModel.stop()
                 }

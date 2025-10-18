@@ -23,7 +23,6 @@ final class ActivityManager: ObservableObject {
     private init() {}
     
     // MARK: - Live Activity Management
-    
     /// Start a new Live Activity for timer session
     func startNewLiveActivity(
         presetName: String,
@@ -103,8 +102,6 @@ final class ActivityManager: ObservableObject {
         do {
             await activity.update(.init(state: contentState, staleDate: nil))
             print("Live Activity updated")
-        } catch {
-            print("Failed to update Live Activity: \(error)" )
         }
     }
     

@@ -10,6 +10,7 @@ import SwiftUI
 struct AppColors {
     // Primary monochrome colors
     static let primary = Color.primary
+    static let primaryRevert = Color("PrimaryRevertColor")
     static let secondary = Color.secondary
 
     // Background colors

@@ -15,7 +15,9 @@ struct RootView: View {
 
     var body: some View {
         Group {
-            if appViewModel.isAuthenticated {
+            if appViewModel.isLoading {
+              SplashScreenView()
+            } else if appViewModel.isAuthenticated {
                 // display MainTabView
                 MainTabView()
                     .environmentObject(appViewModel.authService)
@@ -24,6 +26,7 @@ struct RootView: View {
                 AuthView(authService: appViewModel.authService)
             }
         }
+        .animation(.easeInOut(duration: 0.3), value: appViewModel.isLoading)
         .animation(.easeInOut(duration: 0.3), value: appViewModel.authService.currentUser != nil)
     }
 }

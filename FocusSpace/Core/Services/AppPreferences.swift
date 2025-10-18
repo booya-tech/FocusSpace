@@ -18,12 +18,13 @@ final class AppPreferences: ObservableObject {
 
     // MARK: - Timer Settings
     // Custom focus durations (in minutes)
-    @Published var customFocusDurations: [Int] {
-        didSet { defaults.set(customFocusDurations, forKey: "customFocusDurations") }
+    // Custom focus duration (in minutes)
+    @Published var selectedFocusDuration: Int {
+        didSet { defaults.set(selectedFocusDuration, forKey: "selectedFocusDuration") }
     }
     // Custom break durations (in minutes)
-    @Published var customBreakDurations: [Int] {
-        didSet { defaults.set(customBreakDurations, forKey: "customBreakDurations") }
+    @Published var selectedBreakDuration: Int {
+        didSet { defaults.set(selectedBreakDuration, forKey: "selectedBreakDuration") }
     }
     // Strict mode (disable pause/resume)
     @Published var isStrictModeEnabled: Bool {
@@ -47,26 +48,18 @@ final class AppPreferences: ObservableObject {
 
     // MARK: - Initialization
     private init() {
-        self.customFocusDurations = defaults.object(forKey: "customFocusDurations") as? [Int] ?? [25, 30, 35, 40, 45, 50]
-        self.customBreakDurations = defaults.object(forKey: "customBreakDurations") as? [Int] ?? [5, 10]
+        self.selectedFocusDuration = defaults.object(forKey: "selectedFocusDuration") as? Int ?? 25
+        self.selectedBreakDuration = defaults.object(forKey: "selectedBreakDuration") as? Int ?? 5
         self.isStrictModeEnabled = defaults.bool(forKey: "isStrictModeEnabled")
         self.dailyFocusGoal = defaults.object(forKey: "dailyFocusGoal") as? Int ?? 120
         self.isSoundEnabled = defaults.object(forKey: "isSoundEnabled") as? Bool ?? true
         self.isHapticsEnabled = defaults.object(forKey: "isHapticsEnabled") as? Bool ?? true
     }
 
-    // MARK: - Helper Methods
-    // Get timer presets based on current settings
-    var currentTimerPresets: [TimerPreset] {
-        return customFocusDurations.map { minutes in
-            TimerPreset(durationTitle: "\(minutes)", minutes: minutes)
-        }
-    }
-
     // Reset all preferences to defaults
     func resetToDefaults() {
-        customFocusDurations = [25, 30, 35, 40, 45, 50]
-        customBreakDurations = [5, 10]
+        selectedFocusDuration = 25
+        selectedBreakDuration = 5
         isStrictModeEnabled = false
         dailyFocusGoal = 120
         isSoundEnabled = true

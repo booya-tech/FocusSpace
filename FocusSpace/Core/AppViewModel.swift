@@ -12,6 +12,7 @@ import Combine
 final class AppViewModel: NSObject,ObservableObject {
     @Published var authService = AuthService()
     @Published var notificationManager = NotificationManager.shared
+    @Published var isLoading = true
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -25,6 +26,16 @@ final class AppViewModel: NSObject,ObservableObject {
                 if user != nil {
                     Task {
                         await self?.requestNotificationPermissions()
+                        try? await Task.sleep(nanoseconds: 500_000_000)
+                        await MainActor.run {
+                            self?.isLoading = false
+                        }
+                    }
+                } else {
+                    Task { @MainActor in
+                        // No user, loading complete
+                        try? await Task.sleep(nanoseconds: 500_000_000)
+                        self?.isLoading = false
                     }
                 }
             }
@@ -39,7 +50,7 @@ final class AppViewModel: NSObject,ObservableObject {
         do {
             try await authService.signOut()
         } catch {
-            print("Sign out error: \(error.localizedDescription)")
+            Logger.log("Sign out error: \(error.localizedDescription)")
         }
     }
 

@@ -37,5 +37,6 @@ struct PresetButton: View {
 }
 
 #Preview {
+    PresetButton(preset: TimerPreset.defaults[0], isSelected: false, action: {})
     PresetButton(preset: TimerPreset.defaults[0], isSelected: true, action: {})
 }
