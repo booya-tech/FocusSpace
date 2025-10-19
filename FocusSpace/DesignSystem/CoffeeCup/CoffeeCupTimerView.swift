@@ -59,10 +59,9 @@ struct CoffeeCupTimerView: View {
 
                 // Code icon in center of cup
                 if cupStyle == .glass {
-                    Image(systemName: "apple.meditate")
-                        .font(.system(size: 40, weight: .light))
+                    Text("focus")
+                        .font(.system(size: 18, weight: .light))
                         .foregroundColor(AppColors.primaryRevert)
-                        .offset(y: 0)
                 }
             }
 
