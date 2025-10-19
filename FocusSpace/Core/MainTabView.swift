@@ -53,25 +53,8 @@ struct MainTabView: View {
             }
             // Profile Tab (placeholder)
             NavigationStack {
-                VStack {
-                    if let user = authService.currentUser {
-                        Text("Email: \(user.email ?? "Unknown")")
-                            .font(AppTypography.body)
-                            .foregroundColor(AppColors.secondaryText)
-                    }
-
-//                    Spacer()
-
-                    PrimaryButton(title: "Sign Out") {
-                        Task {
-                            try? await authService.signOut()
-                        }
-                    }
-                    .padding()
-                    Spacer()
-                }
-                .navigationTitle("Profile")
-                .navigationBarTitleDisplayMode(.inline)
+                ProfileView()
+                    .environmentObject(timerViewModel)
             }
             .tabItem {
                 Image(systemName: "person.circle")
