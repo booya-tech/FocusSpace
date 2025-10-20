@@ -103,6 +103,8 @@ struct ProfileView: View {
                 
                 InfoRow(title: "Build", value: buildNumber)
                 
+                /// Description
+                /// might use in the future
                 //                Divider()
                 //                    .background(AppColors.secondaryText.opacity(0.2))
                 

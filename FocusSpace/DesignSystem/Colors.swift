@@ -15,7 +15,7 @@ struct AppColors {
 
     // Background colors
     static let background = Color(UIColor.systemBackground)
-    static let secondaryBackground = Color(UIColor.secondarySystemBackground)
+    static let secondaryBackground = Color(.clear)
 
     // Accent for focus state
     static let accent = Color.accentColor
