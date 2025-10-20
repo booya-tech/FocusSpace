@@ -72,6 +72,8 @@ struct MainTabView: View {
             await timerViewModel.syncOnForeground()
             isSyncing = false
         }
+        .errorAlert()
+        .toast()
     }
 }
 

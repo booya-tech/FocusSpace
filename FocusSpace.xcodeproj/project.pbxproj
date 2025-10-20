@@ -85,6 +85,7 @@
 		C0BDD5182E76D03500E69A6B /* Exceptions for "FocusSpace" folder in "FocusSpaceWidgetsExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Core/Models/AppError.swift,
 				Core/Models/Session.swift,
 				Core/Models/TimerActivityAttributes.swift,
 				Core/Models/TimerPreset.swift,

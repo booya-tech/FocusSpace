@@ -96,27 +96,11 @@ final class AuthViewModel: ObservableObject {
             }
         } catch {
             errorMessage = error.localizedDescription
+            ErrorHandler.shared.handle(error)
         }
     }
     
     // Handle Sign in with Apple result
-    // func signInWithApple() async {
-    //     isLoading = true
-    //     errorMessage = ""
-    //     defer { isLoading = false }
-
-    //     do {
-    //         try await authService.signInWithApple()
-    //     } catch {
-    //         if let authError = error as? ASAuthorizationError,
-    //             authError.code == .canceled
-    //         {
-    //             errorMessage = "Sign in cancelled"
-    //         } else {
-    //             errorMessage = error.localizedDescription
-    //         }
-    //     }
-    // }
     func handleAppleSignIn(_ result: Result<ASAuthorization, Error>) async {
         isLoading = true
         errorMessage = ""
@@ -139,13 +123,14 @@ final class AuthViewModel: ObservableObject {
                 // Check if user cancelled
                 if let authError = error as? ASAuthorizationError,
                    authError.code == .canceled {
-                    errorMessage = "Sign in cancelled"
+                    throw AppError.userCancelled
                 } else {
-                    errorMessage = error.localizedDescription
+                    throw AppError.from(error)
                 }
             }
         } catch {
             errorMessage = error.localizedDescription
+            ErrorHandler.shared.handle(error)
         }
     }
 }
