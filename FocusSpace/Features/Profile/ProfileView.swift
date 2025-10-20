@@ -168,35 +168,29 @@ struct ProfileView: View {
     // MARK: - Computed Properties
     private var memberSinceDate: String {
         if let user = authService.currentUser {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            return formatter.string(from: user.createdAt)
+            return user.createdAt.mediumFormat
         }
         return "Unknown"
     }
     
     private var totalSessions: Int {
-        timerViewModel.completedSessions.filter { $0.type == .focus }.count
+        StatsCalculator.totalFocusSessions(from: timerViewModel.completedSessions)
     }
     
     private var totalMinutes: Int {
-        timerViewModel.completedSessions
-            .filter { $0.type == .focus }
-            .reduce(0) { total, session in
-                total + Int(session.endAt.timeIntervalSince(session.startAt) / 60)
-            }
+        StatsCalculator.totalFocusMinutes(from: timerViewModel.completedSessions)
     }
     
     private var currentStreak: Int {
-        calculateStreak()
+        StatsCalculator.calculateStreak(from: timerViewModel.completedSessions)
     }
     
     private var appVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        AppInfo.version
     }
     
     private var buildNumber: String {
-        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        AppInfo.build
     }
     
     // MARK: - Helper Methods
