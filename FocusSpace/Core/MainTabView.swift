@@ -17,6 +17,7 @@ struct MainTabView: View {
     @StateObject private var localRepository = LocalSessionRepository()
     @StateObject private var syncService: SessionSyncService
     @State private var isSyncing = true
+    @State private var selectedTab = 0
 
     // Initialization
     init() {
@@ -32,7 +33,7 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             // Timer Tab
             NavigationStack {
                 ContentView()
@@ -42,6 +43,7 @@ struct MainTabView: View {
                 Image(systemName: "timer")
                 Text("Timer")
             }
+            .tag(0)
             // Dashboard Tab
             NavigationStack {
                 DashboardView()
@@ -51,6 +53,7 @@ struct MainTabView: View {
                 Image(systemName: "chart.bar.fill")
                 Text("Dashboard")
             }
+            .tag(1)
             // Profile Tab (placeholder)
             NavigationStack {
                 ProfileView()
@@ -60,6 +63,10 @@ struct MainTabView: View {
                 Image(systemName: "person.circle")
                 Text("Profile")
             }
+            .tag(2)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .switchToTimerTab)) { _ in
+            selectedTab = 0
         }
         .overlay {
             if isSyncing {
