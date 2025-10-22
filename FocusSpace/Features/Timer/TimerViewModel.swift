@@ -148,9 +148,9 @@ final class TimerViewModel: ObservableObject {
             )
         }
         
-        Task {
-            await notificationManager.debugAuthorizationStatus()
-        }
+        // Task {
+        //     await notificationManager.debugAuthorizationStatus()
+        // }
 
         Task {
             await notificationManager.scheduleTimerCompletion(
@@ -160,9 +160,9 @@ final class TimerViewModel: ObservableObject {
             )
         }
 
-        Task {
-            await notificationManager.debugPendingNotifications()
-        }
+        // Task {
+        //     await notificationManager.debugPendingNotifications()
+        // }
         
         Logger.log("🔍 Timer Debug:")
         Logger.log("Session Type: \(sessionType.displayName)")
