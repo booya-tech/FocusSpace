@@ -83,6 +83,9 @@ final class TimerViewModel: ObservableObject {
             }
         } catch {
             Logger.log("Failed to load sessions: \(error)")
+            await MainActor.run {
+                ErrorHandler.shared.handle(error, customMessage: "Failed to load sessions")
+            }
         }
     }
 
@@ -93,6 +96,9 @@ final class TimerViewModel: ObservableObject {
             await loadSessions()
         } catch {
             Logger.log("Failed to save session: \(error)")
+            await MainActor.run {
+                ErrorHandler.shared.handle(error, customMessage: "Failed to save session")
+            }
         }
     }
 
@@ -103,6 +109,9 @@ final class TimerViewModel: ObservableObject {
             await loadSessions()
         } catch {
             Logger.log("Sync failed: \(error)")
+            await MainActor.run {
+                ErrorHandler.shared.handle(error, customMessage: "Sync failed")
+            }
         }
     }
 
@@ -139,9 +148,9 @@ final class TimerViewModel: ObservableObject {
             )
         }
         
-        Task {
-            await notificationManager.debugAuthorizationStatus()
-        }
+        // Task {
+        //     await notificationManager.debugAuthorizationStatus()
+        // }
 
         Task {
             await notificationManager.scheduleTimerCompletion(
@@ -151,9 +160,9 @@ final class TimerViewModel: ObservableObject {
             )
         }
 
-        Task {
-            await notificationManager.debugPendingNotifications()
-        }
+        // Task {
+        //     await notificationManager.debugPendingNotifications()
+        // }
         
         Logger.log("🔍 Timer Debug:")
         Logger.log("Session Type: \(sessionType.displayName)")

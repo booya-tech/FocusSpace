@@ -46,7 +46,7 @@ You have the right to:
 - **Delete**: Request deletion of your account and all associated data
 - **Opt-Out**: Disable data syncing by signing out
 
-To exercise these rights, contact us at: boopannachai@example.com
+To exercise these rights, contact us at: booya.pannachai@gmail.com
 
 ## Data Retention
 

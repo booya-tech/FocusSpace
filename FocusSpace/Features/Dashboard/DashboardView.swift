@@ -12,6 +12,24 @@ struct DashboardView: View {
     @EnvironmentObject var timerViewModel: TimerViewModel
 
     var body: some View {
+        Group {
+            if hasAnySessions {
+                dashboardContent
+            } else {
+                emptyState
+            }
+        }        
+        .navigationTitle("Dashboard")
+        .navigationBarTitleDisplayMode(.large)
+        .onAppear() {
+            updateStats()
+        }
+        .onChange(of: timerViewModel.completedSessions) {
+            updateStats()
+        }
+    }
+
+    private var dashboardContent: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 24) {
                 // Daily Goal Section
@@ -28,14 +46,22 @@ struct DashboardView: View {
             }
             .padding()
         }
-        .navigationTitle("Dashboard")
-        .navigationBarTitleDisplayMode(.large)
-        .onAppear() {
-            updateStats()
-        }
-        .onChange(of: timerViewModel.completedSessions) {
-            updateStats()
-        }
+    }
+
+    private var emptyState: some View {
+        EmptyStateView(
+            icon: "chart.bar.fill",
+            title: "No Sessions Yet",
+            message: "Start your first focus session to see your productivity stats and progress",
+            actionTitle: "Start First Session",
+            action: {
+                switchToTimerTab()
+            }
+        )
+    }
+
+    private var hasAnySessions: Bool {
+        !timerViewModel.completedSessions.isEmpty
     }
 
     private var dailyGoalSection: some View {
@@ -122,6 +148,12 @@ struct DashboardView: View {
 
     private func updateStats() {
         viewModel.updateStats(with: timerViewModel.completedSessions)
+    }
+
+    /// Description
+    /// Notification Center to notify switch tab to MainTabView
+    private func switchToTimerTab() {
+        NotificationCenter.default.post(name: .switchToTimerTab, object: nil)
     }
 }
 

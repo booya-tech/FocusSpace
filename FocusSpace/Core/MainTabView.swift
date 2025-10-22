@@ -17,6 +17,7 @@ struct MainTabView: View {
     @StateObject private var localRepository = LocalSessionRepository()
     @StateObject private var syncService: SessionSyncService
     @State private var isSyncing = true
+    @State private var selectedTab = 0
 
     // Initialization
     init() {
@@ -32,7 +33,7 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             // Timer Tab
             NavigationStack {
                 ContentView()
@@ -42,6 +43,7 @@ struct MainTabView: View {
                 Image(systemName: "timer")
                 Text("Timer")
             }
+            .tag(0)
             // Dashboard Tab
             NavigationStack {
                 DashboardView()
@@ -51,32 +53,20 @@ struct MainTabView: View {
                 Image(systemName: "chart.bar.fill")
                 Text("Dashboard")
             }
+            .tag(1)
             // Profile Tab (placeholder)
             NavigationStack {
-                VStack {
-                    if let user = authService.currentUser {
-                        Text("Email: \(user.email ?? "Unknown")")
-                            .font(AppTypography.body)
-                            .foregroundColor(AppColors.secondaryText)
-                    }
-
-//                    Spacer()
-
-                    PrimaryButton(title: "Sign Out") {
-                        Task {
-                            try? await authService.signOut()
-                        }
-                    }
-                    .padding()
-                    Spacer()
-                }
-                .navigationTitle("Profile")
-                .navigationBarTitleDisplayMode(.inline)
+                ProfileView()
+                    .environmentObject(timerViewModel)
             }
             .tabItem {
                 Image(systemName: "person.circle")
                 Text("Profile")
             }
+            .tag(2)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .switchToTimerTab)) { _ in
+            selectedTab = 0
         }
         .overlay {
             if isSyncing {
@@ -89,6 +79,8 @@ struct MainTabView: View {
             await timerViewModel.syncOnForeground()
             isSyncing = false
         }
+        .errorAlert()
+        .toast()
     }
 }
 
