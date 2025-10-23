@@ -4,18 +4,39 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>MonoTimer.xcscheme_^#shared#^_</key>
+		<key>FocusSpace.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>MonoTimerWidgetsExtension.xcscheme_^#shared#^_</key>
+		<key>FocusSpaceWidgetsExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>MonoTimerTests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>MonoTimerUITests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
-	<dict/>
+	<dict>
+		<key>C0BDD4F62E76CFA500E69A6B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C0CAEB452E58B8020035D5D1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
 </dict>
 </plist>

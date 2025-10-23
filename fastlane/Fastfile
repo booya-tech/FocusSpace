@@ -1,0 +1,247 @@
+# Fastfile - Automation workflows for MonoTimer
+# Learn more at https://docs.fastlane.tools
+
+default_platform(:ios)
+
+platform :ios do
+  
+  # ============================================
+  # CONFIGURATION
+  # ============================================
+  PROJECT_NAME = "MonoTimer.xcodeproj"
+  SCHEME_NAME = "MonoTimer"
+  TARGET_NAME = "MonoTimer"
+  
+  # ============================================
+  # BEFORE ALL LANES
+  # Runs before any lane executes
+  # ============================================
+  before_all do
+    # Ensure git status is clean (no uncommitted changes)
+    # Comment this out if you want to test without committing first
+    ensure_git_status_clean
+  end
+
+  # ============================================
+  # LANE: test
+  # Purpose: Run all unit and UI tests
+  # Usage: bundle exec fastlane test
+  # ============================================
+  desc "Run all unit and UI tests"
+  lane :test do
+    run_tests(
+      scheme: SCHEME_NAME,
+      devices: ["iPhone 15 Pro"],
+      clean: true,
+      code_coverage: true
+    )
+    
+    puts "✅ All tests passed!"
+  end
+
+  # ============================================
+  # LANE: build_only
+  # Purpose: Build .ipa without uploading
+  # Usage: bundle exec fastlane build_only
+  # ============================================
+  desc "Build app archive without uploading"
+  lane :build_only do
+    # Get current version info
+    version = get_version_number(
+      xcodeproj: PROJECT_NAME,
+      target: TARGET_NAME
+    )
+    build_num = get_build_number(
+      xcodeproj: PROJECT_NAME
+    )
+    
+    puts "📦 Building MonoTimer version #{version} (#{build_num})"
+    
+    # Build the app
+    build_app(
+      scheme: SCHEME_NAME,
+      export_method: "app-store",
+      clean: true,
+      output_directory: "./build",
+      output_name: "MonoTimer.ipa"
+    )
+    
+    puts "✅ Build complete! Check ./build/MonoTimer.ipa"
+  end
+
+  # ============================================
+  # LANE: beta
+  # Purpose: Build and upload to TestFlight
+  # Usage: bundle exec fastlane beta
+  # ============================================
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    # Step 1: Increment build number
+    increment_build_number(
+      xcodeproj: PROJECT_NAME
+    )
+    
+    # Step 2: Get version info for logging
+    version = get_version_number(
+      xcodeproj: PROJECT_NAME,
+      target: TARGET_NAME
+    )
+    build_num = get_build_number(
+      xcodeproj: PROJECT_NAME
+    )
+    
+    puts "🚀 Preparing TestFlight build: #{version} (#{build_num})"
+    
+    # Step 3: Build the app
+    build_app(
+      scheme: SCHEME_NAME,
+      export_method: "app-store",
+      clean: true,
+      output_directory: "./build",
+      output_name: "MonoTimer.ipa"
+    )
+    
+    # Step 4: Upload to TestFlight
+    upload_to_testflight(
+      skip_submission: true,  # Don't auto-submit to beta review
+      skip_waiting_for_build_processing: true  # Don't wait for processing
+    )
+    
+    # Step 5: Commit version bump
+    commit_version_bump(
+      message: "chore: bump build number to #{build_num} [skip ci]",
+      xcodeproj: PROJECT_NAME
+    )
+    
+    # Step 6: Tag this release
+    add_git_tag(
+      tag: "testflight/#{version}-#{build_num}"
+    )
+    
+    # Step 7: Push to remote
+    push_to_git_remote(
+      remote: "origin",
+      local_branch: "main",
+      remote_branch: "main",
+      tags: true
+    )
+    
+    puts "🎉 Successfully uploaded to TestFlight!"
+    puts "📱 Build #{build_num} is now processing on App Store Connect"
+    puts "⏱️  Processing usually takes 5-15 minutes"
+  end
+
+  # ============================================
+  # LANE: release
+  # Purpose: Submit to App Store for review
+  # Usage: bundle exec fastlane release
+  # ============================================
+  desc "Submit to App Store for review"
+  lane :release do
+    # Step 1: Increment version number
+    increment_version_number(
+      bump_type: "minor",  # Options: "major" (2.0.0), "minor" (1.1.0), "patch" (1.0.1)
+      xcodeproj: PROJECT_NAME
+    )
+    
+    increment_build_number(
+      xcodeproj: PROJECT_NAME
+    )
+    
+    # Step 2: Get version info
+    version = get_version_number(
+      xcodeproj: PROJECT_NAME,
+      target: TARGET_NAME
+    )
+    build_num = get_build_number(
+      xcodeproj: PROJECT_NAME
+    )
+    
+    puts "🚀 Preparing App Store release: #{version} (#{build_num})"
+    
+    # Step 3: Build
+    build_app(
+      scheme: SCHEME_NAME,
+      export_method: "app-store",
+      clean: true
+    )
+    
+    # Step 4: Upload to App Store
+    upload_to_app_store(
+      submit_for_review: false,  # You'll submit manually
+      automatic_release: false,   # You'll release manually
+      skip_screenshots: true,     # Screenshots managed separately
+      skip_metadata: false,
+      precheck_include_in_app_purchases: false
+    )
+    
+    # Step 5: Commit and tag
+    commit_version_bump(
+      message: "chore: release version #{version} [skip ci]",
+      xcodeproj: PROJECT_NAME
+    )
+    
+    add_git_tag(
+      tag: "release/#{version}"
+    )
+    
+    push_to_git_remote
+    
+    puts "🎉 App submitted to App Store!"
+    puts "📝 Next: Go to App Store Connect to submit for review"
+  end
+
+  # ============================================
+  # LANE: bump_patch
+  # Purpose: Increment patch version (1.0.0 -> 1.0.1)
+  # Usage: bundle exec fastlane bump_patch
+  # ============================================
+  desc "Increment patch version number"
+  lane :bump_patch do
+    increment_version_number(
+      bump_type: "patch",
+      xcodeproj: PROJECT_NAME
+    )
+    
+    version = get_version_number(xcodeproj: PROJECT_NAME, target: TARGET_NAME)
+    puts "✅ Version bumped to #{version}"
+  end
+
+  # ============================================
+  # LANE: bump_minor
+  # Purpose: Increment minor version (1.0.0 -> 1.1.0)
+  # Usage: bundle exec fastlane bump_minor
+  # ============================================
+  desc "Increment minor version number"
+  lane :bump_minor do
+    increment_version_number(
+      bump_type: "minor",
+      xcodeproj: PROJECT_NAME
+    )
+    
+    version = get_version_number(xcodeproj: PROJECT_NAME, target: TARGET_NAME)
+    puts "✅ Version bumped to #{version}"
+  end
+
+  # ============================================
+  # AFTER ALL LANES
+  # Runs after successful lane completion
+  # ============================================
+  after_all do |lane|
+    notification(
+      title: "Fastlane Success",
+      message: "✅ Lane '#{lane}' completed successfully!"
+    )
+  end
+
+  # ============================================
+  # ERROR HANDLING
+  # Runs if any lane fails
+  # ============================================
+  error do |lane, exception|
+    notification(
+      title: "Fastlane Error",
+      message: "❌ Lane '#{lane}' failed: #{exception.message}"
+    )
+  end
+end

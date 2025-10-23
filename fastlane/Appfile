@@ -1,0 +1,10 @@
+# Appfile - App identifiers and credentials for MonoTimer
+
+# Your Apple ID email
+apple_id("pannachai.boo21037@gmail.com")
+
+# Bundle Identifier
+app_identifier("com.boopannachai.MonoTimer")
+
+# Uncomment and add your Team ID if you have multiple teams
+team_id("45C3927649")
