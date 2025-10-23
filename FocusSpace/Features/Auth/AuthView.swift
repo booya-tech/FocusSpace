@@ -19,7 +19,7 @@ struct AuthView: View {
         VStack(spacing: 32) {
             // Header
             VStack(spacing: 8) {
-                Text("FocusSpace")
+                Text(AppConstants.appName)
                     .font(AppTypography.title1)
                     .foregroundColor(AppColors.primaryText)
 
@@ -33,18 +33,18 @@ struct AuthView: View {
                 // Email field
                 TextField("Email", text: $viewModel.email)
                     .controlSize(.large)
-                    .textFieldStyle(.roundedBorder)
+                    .textFieldStyle(MonoTextFieldStyle())
                     .textInputAutocapitalization(.never)
                     .keyboardType(.emailAddress)
                 
                 // Password field
                 SecureField("Password", text: $viewModel.password)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .textFieldStyle(MonoTextFieldStyle())
 
                 // Confirm password (only for sign up)
                 if viewModel.isSignUpMode {
                     SecureField("Confirm Password", text: $viewModel.confirmPassword)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .textFieldStyle(MonoTextFieldStyle())
                 }
 
                 // Error message

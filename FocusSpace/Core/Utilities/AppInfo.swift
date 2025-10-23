@@ -27,11 +27,11 @@ enum AppInfo {
     
     /// App name
     static var appName: String {
-        Bundle.main.infoDictionary?["CFBundleName"] as? String ?? "FocusSpace"
+        Bundle.main.infoDictionary?["CFBundleName"] as? String ?? AppConstants.appName
     }
     
     /// Bundle identifier
     static var bundleIdentifier: String {
-        Bundle.main.bundleIdentifier ?? "com.boopannachai.FocusSpace"
+        Bundle.main.bundleIdentifier ?? "com.boopannachai.MonoTimer"
     }
 }

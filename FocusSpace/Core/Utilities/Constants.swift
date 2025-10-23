@@ -10,11 +10,14 @@
 import Foundation
 
 enum AppConstants {
+    //MARK: - App Name
+    static let appName = "MonoTimer"
+    
     // MARK: - URLs
     enum URLs {
-        static let github = "https://github.com/booya-tech/FocusSpace"
-        static let privacyPolicy = "https://github.com/booya-tech/FocusSpace/blob/main/docs/privacy-policy.md"
-        static let termsOfService = "https://github.com/booya-tech/FocusSpace/blob/main/docs/terms-of-service.md"
+        static let github = "https://github.com/booya-tech/MonoTimer"
+        static let privacyPolicy = "https://github.com/booya-tech/MonoTimer/blob/main/docs/privacy-policy.md"
+        static let termsOfService = "https://github.com/booya-tech/MonoTimer/blob/main/docs/terms-of-service.md"
     }
     
     // MARK: - Timer Defaults
