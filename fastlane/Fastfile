@@ -83,19 +83,19 @@ platform :ios do
     puts "✅ Build complete! Check ./build/MonoTimer.ipa"
   end
 
-  # ============================================
+    # ============================================
   # LANE: beta
   # Purpose: Build and upload to TestFlight
   # Usage: bundle exec fastlane beta
   # ============================================
   desc "Build and upload to TestFlight"
   lane :beta do
-    # Step 1: Increment build number
+    # Step 1: Increment build number for ALL targets
     increment_build_number(
       xcodeproj: PROJECT_NAME
     )
     
-    # Step 2: Get version info for logging
+    # Step 2: Get current version from main app
     version = get_version_number(
       xcodeproj: PROJECT_NAME,
       target: TARGET_NAME
@@ -104,9 +104,18 @@ platform :ios do
       xcodeproj: PROJECT_NAME
     )
     
-    puts "🚀 Preparing TestFlight build: #{version} (#{build_num})"
+    # Step 3: Sync widget extension version to match main app
+    # This prevents "Processing" issues on App Store Connect
+    increment_version_number(
+      version_number: version,
+      xcodeproj: PROJECT_NAME,
+      target: "MonoTimerWidgetsExtension"
+    )
     
-    # Step 3: Build the app
+    puts "🚀 Preparing TestFlight build: #{version} (#{build_num})"
+    puts "✅ Widget version synced to: #{version}"
+    
+    # Step 4: Build the app
     build_app(
       scheme: SCHEME_NAME,
       export_method: "app-store",
@@ -115,24 +124,24 @@ platform :ios do
       output_name: "MonoTimer.ipa"
     )
     
-    # Step 4: Upload to TestFlight
+    # Step 5: Upload to TestFlight
     upload_to_testflight(
-      skip_submission: true,  # Don't auto-submit to beta review
-      skip_waiting_for_build_processing: true  # Don't wait for processing
+      skip_submission: true,
+      skip_waiting_for_build_processing: true
     )
     
-    # Step 5: Commit version bump
+    # Step 6: Commit version bump
     commit_version_bump(
-      message: "chore: bump build number to #{build_num} [skip ci]",
+      message: "chore: bump build number to #{build_num}",
       xcodeproj: PROJECT_NAME
     )
     
-    # Step 6: Tag this release
+    # Step 7: Tag this release
     add_git_tag(
       tag: "testflight/#{version}-#{build_num}"
     )
     
-    # Step 7: Push to remote
+    # Step 8: Push to remote
     push_to_git_remote(
       remote: "origin",
       local_branch: "main",
