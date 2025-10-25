@@ -106,6 +106,15 @@ platform :ios do
     
     puts "🚀 Preparing TestFlight build: #{version} (#{build_num})"
     
+    # Step 2.5: Disable automatic signing and configure manual signing
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: PROJECT_NAME,
+      targets: [TARGET_NAME, "MonoTimerWidgetsExtension"],
+      code_sign_identity: "Apple Distribution",
+      bundle_identifier: "com.boopannachai.MonoTimer"
+    )
+    
     # Step 3: Build the app
     build_app(
       scheme: SCHEME_NAME,
