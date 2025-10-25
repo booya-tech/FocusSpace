@@ -17,6 +17,20 @@ platform :ios do
   # Runs before any lane executes
   # ============================================
   before_all do
+    # Set up App Store Connect API authentication
+    if ENV["ASC_KEY_ID"] && ENV["ASC_ISSUER_ID"] && ENV["ASC_KEY_PATH"]
+      app_store_connect_api_key(
+        key_id: ENV["ASC_KEY_ID"],
+        issuer_id: ENV["ASC_ISSUER_ID"],
+        key_filepath: ENV["ASC_KEY_PATH"],
+        in_house: false
+      )
+      puts "✅ Using App Store Connect API Key authentication"
+    else
+      puts "⚠️  App Store Connect API Key not configured"
+      puts "Please set ASC_KEY_ID, ASC_ISSUER_ID, and ASC_KEY_PATH in fastlane/.env"
+    end
+
     # Ensure git status is clean (no uncommitted changes)
     # Comment this out if you want to test without committing first
     ensure_git_status_clean
@@ -109,7 +123,7 @@ platform :ios do
     
     # Step 5: Commit version bump
     commit_version_bump(
-      message: "chore: bump build number to #{build_num} [skip ci]",
+      message: "chore: bump build number to #{build_num}",
       xcodeproj: PROJECT_NAME
     )
     

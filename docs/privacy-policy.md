@@ -1,10 +1,10 @@
-# Privacy Policy for FocusSpace
+# Privacy Policy for MonoTimer
 
 **Last Updated: January 18, 2025**
 
 ## Introduction
 
-FocusSpace ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our iOS application.
+MonoTimer ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our iOS application.
 
 ## Information We Collect
 
@@ -55,7 +55,7 @@ To exercise these rights, contact us at: booya.pannachai@gmail.com
 
 ## Children's Privacy
 
-FocusSpace is not intended for users under 13 years of age. We do not knowingly collect information from children under 13.
+MonoTimer is not intended for users under 13 years of age. We do not knowingly collect information from children under 13.
 
 ## Changes to This Policy
 
@@ -65,8 +65,8 @@ We may update this Privacy Policy from time to time. We will notify you of any c
 
 If you have questions about this Privacy Policy, contact us at:
 - Email: booya.pannachai@gmail.com
-- GitHub: https://github.com/booya-tech/FocusSpace
+- GitHub: https://github.com/booya-tech/MonoTimer
 
 ---
 
-**By using FocusSpace, you agree to this Privacy Policy.**
+**By using MonoTimer, you agree to this Privacy Policy.**
