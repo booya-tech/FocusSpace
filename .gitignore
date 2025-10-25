@@ -41,6 +41,10 @@ build/
 # For now, let's ignore it
 Gemfile.lock
 
+# Ruby/Bundler directories (created by bundle install)
+.bundle/
+vendor/bundle/
+
 # ============================================
 # XCODE
 # ============================================
