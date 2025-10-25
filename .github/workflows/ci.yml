@@ -43,7 +43,6 @@ jobs:
   deploy:
     name: Deploy to TestFlight
     runs-on: macos-14
-    needs: test
     # Only run when MANUALLY triggered
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_to_testflight == 'true'
     
