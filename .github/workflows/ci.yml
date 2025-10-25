@@ -1,15 +1,27 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches: [ main ]
+  # 1. Run tests on Pull Requests (before merging)
   pull_request:
     branches: [ main ]
 
+  # 2. Manual trigger for deployments
+  workflow_dispatch:
+    inputs:
+      deploy_to_testflight:
+        description: 'Deploy to TestFlight?'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 jobs:
   test:
     name: Run Tests
     runs-on: macos-14
+    # Only run tests on PRs, not on every push
+    if: github.event_name == 'pull_request'
     
     steps:
       - name: Checkout code
@@ -32,7 +44,8 @@ jobs:
     name: Deploy to TestFlight
     runs-on: macos-14
     needs: test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # Only run when MANUALLY triggered
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_to_testflight == 'true'
     
     steps:
       - name: Checkout code
