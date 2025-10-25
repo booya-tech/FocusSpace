@@ -1,4 +1,4 @@
-# FocusSpace
+# MonoTimer
 
 A minimalist, black-and-white Pomodoro productivity app for iOS built with SwiftUI and MVVM architecture. Features focus/break timers, session tracking, Live Activities, local notifications, and Sign in with Apple authentication via Supabase.
 
@@ -70,19 +70,19 @@ A minimalist, black-and-white Pomodoro productivity app for iOS built with Swift
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/FocusSpace.git
-   cd FocusSpace
+   git clone https://github.com/your-username/MonoTimer.git
+   cd MonoTimer
    ```
 
 2. **Open in Xcode**:
    ```bash
-   open FocusSpace.xcodeproj
+   open MonoTimer.xcodeproj
    ```
 
 3. **Configure Supabase** (see [Configuration](#configuration) section)
 
 4. **Build and run**:
-   - Select the `FocusSpace` scheme
+   - Select the `MonoTimer` scheme
    - Choose your target device/simulator
    - Press `Cmd+R` to build and run
 
@@ -162,10 +162,10 @@ A minimalist, black-and-white Pomodoro productivity app for iOS built with Swift
 ## Project Structure
 
 ```
-FocusSpace/
-├── FocusSpace.xcodeproj
-├── FocusSpace/
-│   ├── FocusSpaceApp.swift          # App entry point
+MonoTimer/
+├── MonoTimer.xcodeproj
+├── MonoTimer/
+│   ├── MonoTimerApp.swift          # App entry point
 │   ├── ContentView.swift            # Main timer interface
 │   ├── Info.plist                   # App configuration
 │   ├── Core/
@@ -269,13 +269,13 @@ FocusSpace/
 ### Unit Tests
 ```bash
 # Run unit tests
-xcodebuild test -scheme FocusSpace -destination 'platform=iOS Simulator,name=iPhone 15 Pro'
+xcodebuild test -scheme MonoTimer -destination 'platform=iOS Simulator,name=iPhone 15 Pro'
 ```
 
 ### UI Tests
 ```bash
 # Run UI tests
-xcodebuild test -scheme FocusSpace -destination 'platform=iOS Simulator,name=iPhone 15 Pro' -only-testing:FocusSpaceUITests
+xcodebuild test -scheme MonoTimer -destination 'platform=iOS Simulator,name=iPhone 15 Pro' -only-testing:FocusSpaceUITests
 ```
 
 ### Manual Testing
