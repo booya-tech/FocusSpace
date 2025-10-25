@@ -87,10 +87,11 @@ jobs:
           security unlock-keychain -p "" build.keychain
           security set-keychain-settings -t 3600 -u build.keychain
           
-          # Import certificate
-          echo "${{ secrets.BUILD_CERTIFICATE_BASE64 }}" | base64 --decode > certificate.p12
-          security import certificate.p12 -k build.keychain -P "${{ secrets.P12_PASSWORD }}" -T /usr/bin/codesign
+          # Import certificate (create in /tmp to avoid polluting git repo)
+          echo "${{ secrets.BUILD_CERTIFICATE_BASE64 }}" | base64 --decode > /tmp/certificate.p12
+          security import /tmp/certificate.p12 -k build.keychain -P "${{ secrets.P12_PASSWORD }}" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" build.keychain
+          rm /tmp/certificate.p12
           
           # Import provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
