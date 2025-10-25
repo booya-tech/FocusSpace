@@ -19,7 +19,7 @@ on:
 jobs:
   test:
     name: Run Tests
-    runs-on: macos-14
+    runs-on: macos-15
     # Only run tests on PRs, not on every push
     if: github.event_name == 'pull_request'
     
@@ -42,7 +42,7 @@ jobs:
 
   deploy:
     name: Deploy to TestFlight
-    runs-on: macos-14
+    runs-on: macos-15
     # Only run when MANUALLY triggered
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_to_testflight == 'true'
     
