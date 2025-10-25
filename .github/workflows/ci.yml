@@ -59,6 +59,20 @@ jobs:
       - name: Install dependencies
         run: bundle install
       
+      - name: Create Secrets.xcconfig file
+        run: |
+          mkdir -p Config
+          cat > Config/Secrets.xcconfig << EOF
+          //
+          //  Secrets.xcconfig
+          //  MonoTimer
+          //
+          // Supabase Configuration
+          
+          SUPABASE_URL = ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY = ${{ secrets.SUPABASE_ANON_KEY }}
+          EOF
+      
       - name: Create API Key file
         run: |
           mkdir -p ~/private_keys

@@ -112,7 +112,8 @@ platform :ios do
       export_method: "app-store",
       clean: true,
       output_directory: "./build",
-      output_name: "MonoTimer.ipa"
+      output_name: "MonoTimer.ipa",
+      xcargs: "-allowProvisioningUpdates"  # Enable automatic signing for CI/CD
     )
     
     # Step 4: Upload to TestFlight
