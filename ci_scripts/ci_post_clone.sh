@@ -1,6 +1,9 @@
 #!/bin/sh
 
-# Create Config directory
+# Go to repository root (Xcode Cloud provides this)
+cd "${CI_PRIMARY_REPOSITORY_PATH}"
+
+# Create Config directory at repository root
 mkdir -p Config
 
 # Generate Secrets.xcconfig from environment variables
@@ -15,4 +18,4 @@ SUPABASE_URL = ${SUPABASE_URL}
 SUPABASE_ANON_KEY = ${SUPABASE_ANON_KEY}
 EOF
 
-echo "✅ Created Secrets.xcconfig"
+echo "✅ Created Secrets.xcconfig at ${CI_PRIMARY_REPOSITORY_PATH}/Config/Secrets.xcconfig"
