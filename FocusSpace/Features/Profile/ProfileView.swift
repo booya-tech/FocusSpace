@@ -98,10 +98,10 @@ struct ProfileView: View {
             VStack(spacing: 0) {
                 InfoRow(title: "Version", value: appVersion)
                 
-                Divider()
-                    .background(AppColors.secondaryText.opacity(0.2))
+                //                Divider()
+                //                    .background(AppColors.secondaryText.opacity(0.2))
                 
-                InfoRow(title: "Build", value: buildNumber)
+                //                InfoRow(title: "Build", value: buildNumber)
                 
                 /// Description
                 /// might use in the future
