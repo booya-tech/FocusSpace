@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C015ACBF2EB06EF4009E1C01 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C015ACBE2EB06EF4009E1C01 /* PrivacyInfo.xcprivacy */; };
 		C09EFD862EA3C67F0026F0CA /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */; };
 		C09EFD872EA3C67F0026F0CA /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */; };
 		C09EFD882EA3C67F0026F0CA /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */; };
@@ -57,6 +58,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C015ACBE2EB06EF4009E1C01 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		C09EFD852EA3C67F0026F0CA /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		C0BDD4F72E76CFA500E69A6B /* MonoTimerWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MonoTimerWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0BDD4F92E76CFA500E69A6B /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -189,6 +191,7 @@
 		C0CAEB3D2E58B8020035D5D1 = {
 			isa = PBXGroup;
 			children = (
+				C015ACBE2EB06EF4009E1C01 /* PrivacyInfo.xcprivacy */,
 				C09EFD842EA3C6430026F0CA /* Config */,
 				C0D802E62E7856C400853307 /* FocusSpaceWidgetsExtension.entitlements */,
 				C0CAEB482E58B8020035D5D1 /* FocusSpace */,
@@ -373,6 +376,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C09EFD862EA3C67F0026F0CA /* Secrets.xcconfig in Resources */,
+				C015ACBF2EB06EF4009E1C01 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
