@@ -18,9 +18,9 @@ struct SessionDTO: Codable {
     let tag: String?
     let created_at: String?
     
-    init(from session: Session) {
+    init(from session: Session, userId: String) {
         self.id = session.id.uuidString
-        self.user_id = nil // Supabase handles this automatically with RLS
+        self.user_id = userId
         self.session_type = session.type.rawValue
         self.start_at = session.startAt.ISO8601Format()
         self.end_at = session.endAt.ISO8601Format()

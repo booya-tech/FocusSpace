@@ -37,7 +37,9 @@ final class RemoteSessionRepository: SessionRepository {
     }
 
     func save(_ session: Session) async throws {
-        let dto = SessionDTO(from: session)
+        let userId = try await SupabaseManager.shared.client.auth.session.user.id.uuidString
+        
+        let dto = SessionDTO(from: session, userId: userId)
 
         try await supabase
             .from("sessions")

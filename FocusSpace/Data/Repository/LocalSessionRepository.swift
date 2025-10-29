@@ -6,8 +6,6 @@
 //
 //  Local storage implementation for sessions
 //
-
-/// Local in-memory session storage (fallback/cache)
 import Foundation
 
 /// Local in-memory session storage (fallback/cache)
