@@ -13,6 +13,8 @@ struct ProfileView: View {
     @EnvironmentObject var authService: AuthService
     @EnvironmentObject var timerViewModel: TimerViewModel
     @State private var showingSignOutAlert = false
+    @State private var showingDeleteAccountAlert = false
+    @State private var deleteAccountError: String?
     
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -28,6 +30,9 @@ struct ProfileView: View {
                 
                 // App Info Section
                 appInfoSection
+
+                // Delete Account Section
+                deleteAccountSection
                 
                 // Sign Out Button
                 signOutSection
@@ -145,6 +150,49 @@ struct ProfileView: View {
                             .stroke(AppColors.secondaryText.opacity(0.2), lineWidth: 1)
                     }
             )
+        }
+    }
+
+    // MARK: - Delete Account Section
+    private var deleteAccountSection: some View {
+        Button(action: { showingDeleteAccountAlert = true }) {
+            HStack {
+                Text("Delete Account")
+            }
+            .font(AppTypography.body)
+            .foregroundColor(.red)
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.red.opacity(0.1))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.red.opacity(0.5), lineWidth: 1)
+                    }
+            )
+        }
+        .alert("Delete Account", isPresented: $showingDeleteAccountAlert) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                Task {
+                    await deleteAccount()
+                }
+            }
+        } message: {
+            Text(
+                "Are you sure you want to permanently delete your account? This will delete all your sessions, stats, and personal data. This action cannot be undone."
+            )
+        }
+    }
+
+    // MARK: - Delete Account Action
+    private func deleteAccount() async {
+        do {
+            try await authService.deleteAccount()
+        } catch {
+            deleteAccountError = error.localizedDescription
+            ErrorHandler.shared.handle(error)
         }
     }
     

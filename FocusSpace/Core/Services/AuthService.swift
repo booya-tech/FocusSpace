@@ -94,4 +94,19 @@ final class AuthService: ObservableObject {
     var isAuthenticated: Bool {
         currentUser != nil
     }
+
+    // Delete user account and all associated data
+    func deleteAccount() async throws {
+        isLoading = true
+        defer { isLoading = false }
+
+        // Step 1: Delete all user data from database
+        try await supabase.rpc("delete_own_account").execute()
+
+        // Step 2: Sign out (revokes auth session)
+        try await supabase.auth.signOut()
+
+        // Step 3: Clear local state
+        currentUser = nil
+    }
 }
