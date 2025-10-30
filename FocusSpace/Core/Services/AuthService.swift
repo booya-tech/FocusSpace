@@ -90,6 +90,19 @@ final class AuthService: ObservableObject {
         currentUser = nil
     }
 
+    // Verify password before sensitive operations
+    func verifyPassword(password: String) async throws {
+        guard let email = currentUser?.email else {
+            throw AuthError.notAuthenticated
+        }
+
+        // Re-authenticate with current credentials
+        _ = try await supabase.auth.signIn(
+            email: email,
+            password: password
+        )
+    }
+
     // Check if user is authenticated
     var isAuthenticated: Bool {
         currentUser != nil
