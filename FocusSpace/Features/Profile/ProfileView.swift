@@ -186,12 +186,12 @@ struct ProfileView: View {
                 Text(AppString.signOut)
             }
             .font(AppTypography.body)
-            .foregroundColor(.red)
+            .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.red.opacity(0.3), lineWidth: 1)
+                    .fill(Color.red)
             )
         }
     }
