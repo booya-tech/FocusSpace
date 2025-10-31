@@ -58,7 +58,7 @@ enum AppError: LocalizedError {
             return "Session token is invalid"
         case .sessionExpired:
             return "Your session has expired. Please sign in again"
-            
+
         // Network
         case .networkUnavailable:
             return "No internet connection"

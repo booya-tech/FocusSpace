@@ -12,6 +12,7 @@ import SwiftUI
 struct InfoRow: View {
     let title: String
     let value: String
+    let icon: String
     
     var body: some View {
         HStack {
@@ -21,6 +22,11 @@ struct InfoRow: View {
             
             Spacer()
             
+            if !icon.isEmpty {
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(AppColors.primary)
+            }
             Text(value)
                 .font(AppTypography.body)
                 .foregroundColor(AppColors.secondaryText)
@@ -31,8 +37,8 @@ struct InfoRow: View {
 
 #Preview {
     VStack(spacing: 0) {
-        InfoRow(title: "Version", value: "1.0")
+        InfoRow(title: "Version", value: "1.0", icon: "chevron.right")
         Divider()
-        InfoRow(title: "Build", value: "1.0.7")
+        InfoRow(title: "Build", value: "", icon: "chevron.right")
     }
 }

@@ -88,6 +88,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Core/Models/AppError.swift,
+				Core/Models/AuthError.swift,
 				Core/Models/Session.swift,
 				Core/Models/TimerActivityAttributes.swift,
 				Core/Models/TimerPreset.swift,

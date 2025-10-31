@@ -19,7 +19,7 @@ struct ProfileView: View {
             VStack(spacing: 24) {
                 // User Info Section
                 UserInfoSection(
-                    email: authService.currentUser?.email ?? "Unknown",
+                    email: authService.currentUser?.email ?? AppString.unknown,
                     memberSince: memberSinceDate
                 )
                 
@@ -28,6 +28,9 @@ struct ProfileView: View {
                 
                 // App Info Section
                 appInfoSection
+
+                // Delete Account Section
+                deleteAccountSection
                 
                 // Sign Out Button
                 signOutSection
@@ -36,43 +39,43 @@ struct ProfileView: View {
             }
             .padding()
         }
-        .navigationTitle("Profile")
+        .navigationTitle(AppString.profileViewTitle)
         .navigationBarTitleDisplayMode(.large)
-        .alert("Sign Out", isPresented: $showingSignOutAlert) {
-            Button("Cancel", role: .cancel) { }
-            Button("Sign Out", role: .destructive) {
+        .alert(AppString.signOut, isPresented: $showingSignOutAlert) {
+            Button(AppString.cancel, role: .cancel) { }
+            Button(AppString.signOut, role: .destructive) {
                 Task {
                     try? await authService.signOut()
                 }
             }
         } message: {
-            Text("Are you sure you want to sign out? Your data will be synced before signing out.")
+            Text(AppString.profileViewSignOutTitle)
         }
     }
     
     // MARK: - Quick Stats Section
     private var quickStatsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Your Stats")
+            Text(AppString.profileViewStatsTitle)
                 .font(AppTypography.title3)
                 .foregroundColor(AppColors.primaryText)
             
             VStack(spacing: 12) {
                 StatRow(
-                    icon: "checkmark.circle.fill",
-                    title: "Total Sessions",
+                    icon: AppIcon.checkmarkCircleFill,
+                    title: AppString.profileViewStateRowSessions,
                     value: "\(totalSessions)"
                 )
                 
                 StatRow(
-                    icon: "clock.fill",
-                    title: "Total Focus Time",
+                    icon: AppIcon.clockFill,
+                    title: AppString.profileViewStateRowFocusTime,
                     value: "\(totalMinutes) min"
                 )
                 
                 StatRow(
-                    icon: "flame.fill",
-                    title: "Current Streak",
+                    icon: AppIcon.flameFill,
+                    title: AppString.profileViewStateRowCurrentStreak,
                     value: "\(currentStreak) days"
                 )
             }
@@ -91,12 +94,16 @@ struct ProfileView: View {
     // MARK: - App Info Section
     private var appInfoSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("About")
+            Text(AppString.about)
                 .font(AppTypography.title3)
                 .foregroundColor(AppColors.primaryText)
             
             VStack(spacing: 0) {
-                InfoRow(title: "Version", value: appVersion)
+                InfoRow(
+                    title: AppString.version,
+                    value: appVersion,
+                    icon: ""
+                )
                 
                 //                Divider()
                 //                    .background(AppColors.secondaryText.opacity(0.2))
@@ -147,20 +154,44 @@ struct ProfileView: View {
             )
         }
     }
+
+    // MARK: - Delete Account Section
+    private var deleteAccountSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Action")
+                .font(AppTypography.title3)
+                .foregroundColor(AppColors.primaryText)
+            
+            NavigationLink {
+                DeleteAccountView(authService: authService)
+                    .environmentObject(authService)
+            } label: {
+                InfoRow(title: AppString.profileViewDeleteAccount, value: "", icon: AppIcon.chevronRight)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(AppColors.secondaryBackground)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(AppColors.secondaryText.opacity(0.2), lineWidth: 1)
+                            }
+                    )
+            }
+        }
+    }
     
     // MARK: - Sign Out Section
     private var signOutSection: some View {
         Button(action: { showingSignOutAlert = true }) {
             HStack {
-                Text("Sign Out")
+                Text(AppString.signOut)
             }
             .font(AppTypography.body)
-            .foregroundColor(.red)
+            .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.red.opacity(0.3), lineWidth: 1)
+                    .fill(Color.red)
             )
         }
     }
@@ -170,7 +201,7 @@ struct ProfileView: View {
         if let user = authService.currentUser {
             return user.createdAt.mediumFormat
         }
-        return "Unknown"
+        return AppString.unknown
     }
     
     private var totalSessions: Int {

@@ -19,7 +19,13 @@ final class AuthService: ObservableObject {
 
     private let supabase = SupabaseManager.shared.client
     private var appleSignInCoordinator: AppleSignInCoordinator?
+    // Check if user signed in with Apple
+    var isAppleUser: Bool {
+        guard let user = currentUser else { return false }
 
+        return user.appMetadata["provider"] == "apple"
+    }
+    
     init() {
         // Check for existing session on app launch
         Task {
@@ -90,8 +96,36 @@ final class AuthService: ObservableObject {
         currentUser = nil
     }
 
+    // Verify password before sensitive operations
+    func verifyPassword(password: String) async throws {
+        guard let email = currentUser?.email else {
+            throw AuthError.notAuthenticated
+        }
+
+        // Re-authenticate with current credentials
+        _ = try await supabase.auth.signIn(
+            email: email,
+            password: password
+        )
+    }
+
     // Check if user is authenticated
     var isAuthenticated: Bool {
         currentUser != nil
+    }
+
+    // Delete user account and all associated data
+    func deleteAccount() async throws {
+        isLoading = true
+        defer { isLoading = false }
+
+        // Step 1: Delete all user data from database
+        try await supabase.rpc("delete_own_account").execute()
+
+        // Step 2: Sign out (revokes auth session)
+        try await supabase.auth.signOut()
+
+        // Step 3: Clear local state
+        currentUser = nil
     }
 }
