@@ -23,7 +23,7 @@ struct AuthView: View {
                     .font(AppTypography.title1)
                     .foregroundColor(AppColors.primaryText)
 
-                Text(viewModel.isSignUpMode ? "Create an account" : "Welcome back")
+                Text(viewModel.isSignUpMode ? "Create an account" : "welcome back")
                     .font(AppTypography.body)
                     .foregroundColor(AppColors.secondaryText)
             }
@@ -69,22 +69,6 @@ struct AuthView: View {
                         .foregroundColor(AppColors.secondaryText.opacity(0.3))
                 }
 
-                // Button(action: {
-                //     Task {
-                //         await viewModel.signInWithApple()
-                //     }
-                // }) {
-                //     HStack {
-                //         Image(systemName: "apple.logo")
-                //         Text("Sign in with Apple")
-                //     }
-                //     .frame(maxWidth: .infinity)
-                //     .frame(height: 50)
-                //     .background(Color.black)
-                //     .foregroundColor(Color.white)
-                //     .cornerRadius(8)
-                // }
-                // .disabled(viewModel.isLoading)
                 SignInWithAppleButton(
                     .signIn,
                     onRequest: { request in

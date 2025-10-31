@@ -57,26 +57,29 @@ struct DeleteAccountView: View {
                 .padding(.horizontal)
                 
                 // Password Confirmation
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Confirm Your Password")
-                        .font(AppTypography.callout)
-                        .foregroundColor(AppColors.primaryText)
-                    
-                    SecureField("Enter password", text: $viewModel.password)
-                        .textContentType(.password)
-                        .autocapitalization(.none)
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(AppColors.secondaryBackground)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(AppColors.secondaryText.opacity(0.2), lineWidth: 1)
-                                }
-                        )
+                if !authService.isAppleUser {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Confirm Your Password")
+                            .font(AppTypography.callout)
+                            .foregroundColor(AppColors.primaryText)
+
+                        SecureField("Enter password", text: $viewModel.password)
+                            .textContentType(.password)
+                            .autocapitalization(.none)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(AppColors.secondaryBackground)
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(
+                                                AppColors.secondaryText.opacity(0.2), lineWidth: 1)
+                                    }
+                            )
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 16)
                 }
-                .padding(.horizontal)
-                .padding(.top, 16)
                 
                 // Error Message
                 if let error = viewModel.errorMessage {
@@ -87,7 +90,7 @@ struct DeleteAccountView: View {
                 }
                 
                 // Buttons
-                VStack(spacing: 8) {
+                VStack(spacing: 16) {
                     // Delete Button
                     Button(action: {
                         Task {
@@ -112,8 +115,8 @@ struct DeleteAccountView: View {
                                 .fill(Color.red)
                         )
                     }
-                    .disabled(viewModel.isDeleting || viewModel.password.isEmpty)
-                    .opacity(viewModel.password.isEmpty ? 0.5 : 1.0)
+                    .disabled(viewModel.isDeleting || (!authService.isAppleUser && viewModel.password.isEmpty))
+                    .opacity(!authService.isAppleUser && viewModel.password.isEmpty ? 0.5 : 1.0)
                     
                     // Cancel Button
                     Button(action: { dismiss() }) {

@@ -19,7 +19,13 @@ final class AuthService: ObservableObject {
 
     private let supabase = SupabaseManager.shared.client
     private var appleSignInCoordinator: AppleSignInCoordinator?
+    // Check if user signed in with Apple
+    var isAppleUser: Bool {
+        guard let user = currentUser else { return false }
 
+        return user.appMetadata["provider"] == "apple"
+    }
+    
     init() {
         // Check for existing session on app launch
         Task {

@@ -20,19 +20,18 @@ final class DeleteAccountViewModel: ObservableObject {
     }
     
     func deleteAccount() async {
-        guard !password.isEmpty else {
-            errorMessage = "Please enter your password"
-            return
-        }
-        
         isDeleting = true
         errorMessage = nil
         
         do {
-            // Step 1: Verify password
-            try await authService.verifyPassword(password: password)
+            if !authService.isAppleUser {
+                guard !password.isEmpty else {
+                    errorMessage = "Please enter your password"
+                    return
+                }
+                try await authService.verifyPassword(password: password)
+            }
             
-            // Step 2: Delete account
             try await authService.deleteAccount()
             
         } catch {
