@@ -28,6 +28,13 @@ struct DayData: Identifiable {
 @MainActor
 /// View model for dashboard statistics and analytics
 final class DashboardViewModel: ObservableObject {
+    @Published var selectedPeriod: TimePeriod = .week
+    @Published var periodStats = StatsData(
+        totalSessions: 0, totalMinutes: 0, longestStreak: 0, currentStreak: 0,
+        dailyGoalProgress: 0.0
+    )
+    @Published var periodChartData: [DayData] = []
+
     @Published var todayStats = StatsData(
         totalSessions: 0, totalMinutes: 0, longestStreak: 0, currentStreak: 0, dailyGoalProgress: 0.0
     )
@@ -43,6 +50,19 @@ final class DashboardViewModel: ObservableObject {
         todayStats = computeTodayStats(from: sessions)
         weeklyStats = computeWeekStats(from: sessions)
         weeklyData = computeWeeklyData(from: sessions)
+
+        updatePeriodStats(with: sessions)
+    }
+
+    func updatePeriodStats(with sessions: [Session]) {
+        switch selectedPeriod {
+        case .week:
+            periodStats = weeklyStats
+            periodChartData = weeklyData
+        case .year:
+            periodStats = computeYearStats(from: sessions)
+            periodChartData = computeYearData(from: sessions)
+        }
     }
 
     // Update stats based on completed sessions
@@ -110,6 +130,54 @@ final class DashboardViewModel: ObservableObject {
             dayFormatter.dateFormat = "E" // Mon, Tue, Wed, etc.
 
             return DayData(day: dayFormatter.string(from: date), minutes: totalMinutes, date: date)
+        }.reversed()
+    }
+
+    private func computeYearStats(from sessions: [Session]) -> StatsData {
+        let calendar = Calendar.current
+        let today = Date()
+        let yearAgo = calendar.date(byAdding: .year, value: -1, to: today) ?? today
+
+        let yearSessions = sessions.filter { session in
+            session.startAt >= yearAgo && session.startAt <= today
+        }
+
+        let focusSessions = yearSessions.filter { $0.type == .focus }
+        let totalMinutes = focusSessions.reduce(0) { $0 + $1.durationMinutes }
+
+        return StatsData(
+            totalSessions: focusSessions.count,
+            totalMinutes: totalMinutes,
+            longestStreak: computeLongestStreak(from: sessions),
+            currentStreak: computeCurrentStreak(from: sessions),
+            dailyGoalProgress: 0.0
+        )
+    }
+
+    private func computeYearData(from sessions: [Session]) -> [DayData] {
+        let calendar = Calendar.current
+        let today = Date()
+
+        return (0..<12).compactMap { monthOffset in
+            guard let monthStart = calendar.date(byAdding: .month, value: -monthOffset, to: today)
+            else { return nil }
+            guard let monthEnd = calendar.date(byAdding: .month, value: 1, to: monthStart) else {
+                return nil
+            }
+
+            let monthSessions = sessions.filter { session in
+                session.startAt >= monthStart && session.startAt < monthEnd
+            }
+
+            let focusSessions = monthSessions.filter { $0.type == .focus }
+            let totalMinutes = focusSessions.reduce(0) { $0 + $1.durationMinutes }
+
+            let monthFormatter = DateFormatter()
+            monthFormatter.dateFormat = "MMM"  // Jan, Feb, Mar
+
+            return DayData(
+                day: monthFormatter.string(from: monthStart), minutes: totalMinutes,
+                date: monthStart)
         }.reversed()
     }
 

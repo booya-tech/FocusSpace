@@ -12,6 +12,7 @@ import SwiftUI
 /// Simple bar chart showing weekly focus session minutes
 struct WeeklyChart: View {
     let data: [DayData]
+    let title: String
     let maxHeight: CGFloat = 60 // 60 minutes
 
     private var maxMinutes: Int {
@@ -20,7 +21,7 @@ struct WeeklyChart: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Text("This Week")
+            Text(title)
                 .font(AppTypography.caption)
                 .foregroundColor(AppColors.secondaryText)
 
@@ -38,7 +39,7 @@ struct WeeklyChart: View {
 
                         // Day label
                         Text(dayData.day)
-                            .font(AppTypography.caption)
+                            .font(AppTypography.caption)  // Smaller font for many bars
                             .foregroundColor(AppColors.secondaryText)
                     }
                 }
@@ -57,13 +58,16 @@ struct WeeklyChart: View {
 }
 
 #Preview {
-    WeeklyChart(data: [
-        DayData(day: "Mon", minutes: 45, date: Date()),
-        DayData(day: "Tue", minutes: 60, date: Date()),
-        DayData(day: "Wed", minutes: 30, date: Date()),
-        DayData(day: "Thu", minutes: 75, date: Date()),
-        DayData(day: "Fri", minutes: 0, date: Date()),
-        DayData(day: "Sat", minutes: 80, date: Date()),
-        DayData(day: "Sun", minutes: 60, date: Date()),
-    ])
+    WeeklyChart(
+        data: [
+            DayData(day: "Mon", minutes: 45, date: Date()),
+            DayData(day: "Tue", minutes: 60, date: Date()),
+            DayData(day: "Wed", minutes: 30, date: Date()),
+            DayData(day: "Thu", minutes: 75, date: Date()),
+            DayData(day: "Fri", minutes: 0, date: Date()),
+            DayData(day: "Sat", minutes: 80, date: Date()),
+            DayData(day: "Sun", minutes: 60, date: Date()),
+        ],
+        title: "This Week"
+    )
 }

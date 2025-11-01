@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct DashboardView: View {
-    @StateObject private var viewModel = DashboardViewModel()
+    @StateObject private var viewModel: DashboardViewModel
     @EnvironmentObject var timerViewModel: TimerViewModel
+
+    init() {
+        _viewModel = StateObject(wrappedValue: DashboardViewModel())
+    }
 
     var body: some View {
         Group {
@@ -38,13 +42,62 @@ struct DashboardView: View {
                 // Stats Grid
                 statsGrid
 
+                // Period Selector
+                PeriodSelector(selectedPeriod: $viewModel.selectedPeriod)
+                    .onChange(of: viewModel.selectedPeriod) {
+                        viewModel.updatePeriodStats(with: timerViewModel.completedSessions)
+                    }
+
+                // Period Stats Section
+                periodStatsSection
+
                 // Weekly Chart
-                WeeklyChart(data: viewModel.weeklyData)
+                WeeklyChart(data: viewModel.periodChartData, title: viewModel.selectedPeriod.rawValue)
 
                 // Bottom padding
                 Spacer(minLength: 100)
             }
             .padding()
+        }
+    }
+
+    private var periodStatsSection: some View {
+        VStack(spacing: 16) {
+            Text("Session History")
+                .font(AppTypography.title2)
+                .foregroundColor(AppColors.primaryText)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            HStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Total Sessions")
+                        .font(AppTypography.caption)
+                        .foregroundColor(AppColors.secondaryText)
+                    Text("\(viewModel.periodStats.totalSessions)")
+                        .font(AppTypography.title2)
+                        .foregroundColor(AppColors.primaryText)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Total Minutes")
+                        .font(AppTypography.caption)
+                        .foregroundColor(AppColors.secondaryText)
+                    Text("\(viewModel.periodStats.totalMinutes)")
+                        .font(AppTypography.title2)
+                        .foregroundColor(AppColors.primaryText)
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(AppColors.secondaryBackground)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(AppColors.secondaryText.opacity(0.2), lineWidth: 1)
+                    }
+            )
         }
     }
 
@@ -93,6 +146,7 @@ struct DashboardView: View {
                 .foregroundColor(AppColors.secondaryText)
                 .multilineTextAlignment(.center)
         }
+        .frame(maxWidth: .infinity)
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 16)
