@@ -158,7 +158,7 @@ struct ProfileView: View {
     // MARK: - Delete Account Section
     private var deleteAccountSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Action")
+            Text("Account")
                 .font(AppTypography.title3)
                 .foregroundColor(AppColors.primaryText)
             
