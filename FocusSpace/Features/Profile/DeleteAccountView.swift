@@ -11,6 +11,7 @@ struct DeleteAccountView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var authService: AuthService
     @StateObject private var viewModel: DeleteAccountViewModel
+    @State private var showingSignOutAlert: Bool = false
     
     init(authService: AuthService) {
         _viewModel = StateObject(wrappedValue: DeleteAccountViewModel(authService: authService))
@@ -92,11 +93,7 @@ struct DeleteAccountView: View {
                 // Buttons
                 VStack(spacing: 16) {
                     // Delete Button
-                    Button(action: {
-                        Task {
-                            await viewModel.deleteAccount()
-                        }
-                    }) {
+                    Button(action: { showingSignOutAlert = true }) {
                         HStack {
                             if viewModel.isDeleting {
                                 ProgressView()
@@ -117,20 +114,6 @@ struct DeleteAccountView: View {
                     }
                     .disabled(viewModel.isDeleting || (!authService.isAppleUser && viewModel.password.isEmpty))
                     .opacity(!authService.isAppleUser && viewModel.password.isEmpty ? 0.5 : 1.0)
-                    
-                    // Cancel Button
-                    Button(action: { dismiss() }) {
-                        Text("Cancel")
-                            .font(AppTypography.body)
-                            .foregroundColor(AppColors.primaryText)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(AppColors.secondaryText.opacity(0.3), lineWidth: 1)
-                            )
-                    }
-                    .disabled(viewModel.isDeleting)
                 }
                 .padding(.horizontal)
                 .padding(.top, 24)
@@ -140,6 +123,16 @@ struct DeleteAccountView: View {
         }
         .navigationTitle("Delete Account")
         .navigationBarTitleDisplayMode(.inline)
+        .alert(AppString.deleteAccount, isPresented: $showingSignOutAlert) {
+            Button(AppString.cancel, role: .cancel) { }
+            Button(AppString.delete, role: .destructive) {
+                Task {
+                    await viewModel.deleteAccount()
+                }
+            }
+        } message: {
+            Text(AppString.deleteAccountViewDialogTitle)
+        }
     }
 }
 
